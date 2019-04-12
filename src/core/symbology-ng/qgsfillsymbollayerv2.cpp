@@ -3602,6 +3602,7 @@ QgsSymbolLayerV2* QgsCentroidFillSymbolLayerV2::createFromSld( QDomElement &elem
 
   QgsCentroidFillSymbolLayerV2* sl = new QgsCentroidFillSymbolLayerV2();
   sl->setSubSymbol( marker );
+  sl->setPointOnAllParts( false );
   return sl;
 }
 
