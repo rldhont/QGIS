@@ -62,7 +62,7 @@ QgsSLDConfigParser::QgsSLDConfigParser( QDomDocument* doc, const QMap<QString, Q
     , mXMLDoc( doc )
     , mParameterMap( parameters )
     , mSLDNamespace( "http://www.opengis.net/sld" )
-    , mOutputUnits( QgsMapRenderer::Pixels )
+    , mOutputUnits( QgsMapRenderer::Millimeters )
     , mFallbackParser( nullptr )
 {
 
