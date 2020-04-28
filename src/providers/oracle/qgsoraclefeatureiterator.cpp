@@ -516,6 +516,7 @@ bool QgsOracleFeatureIterator::openQuery( const QString &whereClause, const QVar
     mArgs = args;
     if ( !execQuery( query, args, 1 ) )
     {
+      showLog = true;
       if ( showLog )
       {
         QgsMessageLog::logMessage( QObject::tr( "Fetching features failed.\nSQL: %1\nError: %2" )
