@@ -226,14 +226,14 @@ void QgsOracleConn::unref()
 
 bool QgsOracleConn::exec( QSqlQuery &qry, const QString &sql, const QVariantList &params )
 {
-  QgsDebugMsgLevel( QStringLiteral( "SQL: %1" ).arg( sql ), 4 );
+  QgsDebugMsg( QStringLiteral( "SQL: %1" ).arg( sql ) );
 
   bool res = qry.prepare( sql );
   if ( res )
   {
     for ( const auto &param : params )
     {
-      QgsDebugMsgLevel( QStringLiteral( " ARG: %1 [%2]" ).arg( param.toString(), param.typeName() ), 4 );
+      QgsDebugMsg( QStringLiteral( " ARG: %1 [%2]" ).arg( param.toString(), param.typeName() ) );
       qry.addBindValue( param );
     }
 
