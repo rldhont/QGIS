@@ -267,7 +267,7 @@ QgsOracleConn *QgsOracleProvider::connectionRO() const
 
 bool QgsOracleProvider::exec( QSqlQuery &qry, QString sql, const QVariantList &args )
 {
-  QgsDebugMsgLevel( QStringLiteral( "SQL: %1" ).arg( sql ), 4 );
+  QgsDebugMsg( QStringLiteral( "SQL: %1" ).arg( sql ) );
 
   qry.setForwardOnly( true );
 
@@ -276,7 +276,7 @@ bool QgsOracleProvider::exec( QSqlQuery &qry, QString sql, const QVariantList &a
   {
     for ( const auto &arg : args )
     {
-      QgsDebugMsgLevel( QStringLiteral( " ARG: %1 [%2]" ).arg( arg.toString() ).arg( arg.typeName() ), 4 );
+      QgsDebugMsg( QStringLiteral( " ARG: %1 [%2]" ).arg( arg.toString() ).arg( arg.typeName() ) );
       qry.addBindValue( arg );
     }
     res = qry.exec();
