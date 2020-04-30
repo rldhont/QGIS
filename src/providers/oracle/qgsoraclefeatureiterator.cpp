@@ -506,7 +506,7 @@ bool QgsOracleFeatureIterator::openQuery( const QString &whereClause, const QVar
       query += delim + mConnection->fieldExpression( mSource->mFields.at( idx ) );
     }
 
-    query += QStringLiteral( " FROM %1 \"FEATUREREQUEST\"" ).arg( mSource->mQuery );
+    query += QStringLiteral( " FROM %1 \"FEATUREREQUEST\"" ).arg( mSource->mQuery.simplified() );
 
     if ( !whereClause.isEmpty() )
       query += QStringLiteral( " WHERE %1" ).arg( whereClause );
