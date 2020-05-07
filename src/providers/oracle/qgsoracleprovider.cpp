@@ -267,11 +267,11 @@ QgsOracleConn *QgsOracleProvider::connectionRO() const
 
 bool QgsOracleProvider::exec( QSqlQuery &qry, QString sql, const QVariantList &args )
 {
-  QgsDebugMsg( QStringLiteral( "SQL: %1" ).arg( sql ) );
+  QgsDebugMsg( QStringLiteral( "SQL: %1" ).arg( sql.simplified() ) );
 
   qry.setForwardOnly( true );
 
-  bool res = qry.prepare( sql );
+  bool res = qry.prepare( sql.simplified() );
   if ( res )
   {
     for ( const auto &arg : args )
@@ -279,7 +279,9 @@ bool QgsOracleProvider::exec( QSqlQuery &qry, QString sql, const QVariantList &a
       QgsDebugMsg( QStringLiteral( " ARG: %1 [%2]" ).arg( arg.toString() ).arg( arg.typeName() ) );
       qry.addBindValue( arg );
     }
+    QgsDebugMsg( QStringLiteral( "Before exec: %1" ).arg( qry.lastQuery() ) );
     res = qry.exec();
+    QgsDebugMsg( QStringLiteral( "After exec: %1" ).arg( qry.lastQuery() ) );
   }
 
   if ( !res )
