@@ -45,7 +45,7 @@ QgsLayerRestorer::QgsLayerRestorer( const QList<QgsMapLayer *> &layers )
     {
       QgsMessageLog::logMessage( QStringLiteral( "QGIS Style has not been added to layer restorer for layer %1: %2" ).arg( layer->name(), errMsg ) );
     }
-    ( void )settings.mQgisStyle.setContent( styleDoc.toString() );
+    ( void )settings.mQgisStyle.setContent( styleDoc.toByteArray() );
 
     switch ( layer->type() )
     {
