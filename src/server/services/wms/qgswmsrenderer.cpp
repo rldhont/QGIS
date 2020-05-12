@@ -2657,6 +2657,7 @@ namespace QgsWms
 
   QPainter *QgsRenderer::layersRendering( const QgsMapSettings &mapSettings, QImage &image ) const
   {
+    QgsMessageLog::logMessage( "QgsRenderer::layersRendering start", "Server", Qgis::Info );
     QPainter *painter = nullptr;
 
     QgsFeatureFilterProviderGroup filters;
@@ -2681,6 +2682,7 @@ namespace QgsWms
 
       throw QgsException( QStringLiteral( "Map rendering error in layer '%1'" ).arg( layerWMSName ) );
     }
+    QgsMessageLog::logMessage( "QgsRenderer::layersRendering end", "Server", Qgis::Info );
 
     return painter;
   }

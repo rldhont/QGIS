@@ -50,6 +50,7 @@ namespace QgsWms
 
   void QgsMapRendererJobProxy::render( const QgsMapSettings &mapSettings, QImage *image )
   {
+    QgsMessageLog::logMessage( "QgsMapRendererJobProxy::render start", "Server", Qgis::Info );
     if ( mParallelRendering )
     {
       QgsMapRendererParallelJob renderJob( mapSettings );
@@ -80,6 +81,7 @@ namespace QgsWms
       renderJob.renderSynchronously();
       mErrors = renderJob.errors();
     }
+    QgsMessageLog::logMessage( "QgsMapRendererJobProxy::render end", "Server", Qgis::Info );
   }
 
   QPainter *QgsMapRendererJobProxy::takePainter()
