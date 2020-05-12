@@ -736,16 +736,19 @@ namespace QgsWms
 
   QImage *QgsRenderer::getMap()
   {
+    QgsMessageLog::logMessage( "QgsRenderer::getMap start", "Server", Qgis::Info );
     // check size
     if ( ! mContext.isValidWidthHeight() )
     {
       throw QgsBadRequestException( QgsServiceException::QGIS_InvalidParameterValue,
                                     QStringLiteral( "The requested map size is too large" ) );
     }
+    QgsMessageLog::logMessage( "QgsRenderer::getMap size checked", "Server", Qgis::Info );
 
     // init layer restorer before doing anything
     std::unique_ptr<QgsLayerRestorer> restorer;
     restorer.reset( new QgsLayerRestorer( mContext.layers() ) );
+    QgsMessageLog::logMessage( "QgsRenderer::getMap layer restorer initialized", "Server", Qgis::Info );
 
     // configure layers
     QList<QgsMapLayer *> layers = mContext.layersToRender();
@@ -753,31 +756,39 @@ namespace QgsWms
     QgsMapSettings mapSettings;
     mapSettings.setFlag( QgsMapSettings::RenderBlocking );
     configureLayers( layers, &mapSettings );
+    QgsMessageLog::logMessage( "QgsRenderer::getMap layers configured", "Server", Qgis::Info );
 
     // create the output image and the painter
     std::unique_ptr<QPainter> painter;
     std::unique_ptr<QImage> image( createImage( mContext.mapSize() ) );
+    QgsMessageLog::logMessage( "QgsRenderer::getMap output image created", "Server", Qgis::Info );
 
     // configure map settings (background, DPI, ...)
     configureMapSettings( image.get(), mapSettings );
+    QgsMessageLog::logMessage( "QgsRenderer::getMap map settings configured", "Server", Qgis::Info );
 
     // add layers to map settings
     mapSettings.setLayers( layers );
+    QgsMessageLog::logMessage( "QgsRenderer::getMap layers added to map", "Server", Qgis::Info );
 
     // rendering step for layers
     painter.reset( layersRendering( mapSettings, *image ) );
+    QgsMessageLog::logMessage( "QgsRenderer::getMap layers rendering", "Server", Qgis::Info );
 
     // rendering step for annotations
     annotationsRendering( painter.get() );
+    QgsMessageLog::logMessage( "QgsRenderer::getMap annotations rendering", "Server", Qgis::Info );
 
     // painting is terminated
     painter->end();
+    QgsMessageLog::logMessage( "QgsRenderer::getMap painting is terminated", "Server", Qgis::Info );
 
     // scale output image if necessary (required by WMS spec)
     QImage *scaledImage = scaleImage( image.get() );
     if ( scaledImage )
       image.reset( scaledImage );
 
+    QgsMessageLog::logMessage( "QgsRenderer::getMap end", "Server", Qgis::Info );
     // return
     return image.release();
   }
