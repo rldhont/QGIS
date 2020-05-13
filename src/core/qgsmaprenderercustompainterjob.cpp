@@ -61,12 +61,12 @@ QgsMapRendererCustomPainterJob::QgsMapRendererCustomPainterJob( const QgsMapSett
   , mActive( false )
   , mRenderSynchronously( false )
 {
-  QgsDebugMsgLevel( QStringLiteral( "QPAINTER construct" ), 5 );
+  QgsDebugMsg( QStringLiteral( "QPAINTER construct" ) );
 }
 
 QgsMapRendererCustomPainterJob::~QgsMapRendererCustomPainterJob()
 {
-  QgsDebugMsgLevel( QStringLiteral( "QPAINTER destruct" ), 5 );
+  QgsDebugMsg( QStringLiteral( "QPAINTER destruct" ) );
   Q_ASSERT( !mFutureWatcher.isRunning() );
   //cancel();
 }
@@ -83,9 +83,9 @@ void QgsMapRendererCustomPainterJob::start()
 
   mErrors.clear();
 
-  QgsDebugMsgLevel( QStringLiteral( "QPAINTER run!" ), 5 );
+  QgsDebugMsg( QStringLiteral( "QPAINTER run!" ) );
 
-  QgsDebugMsgLevel( QStringLiteral( "Preparing list of layer jobs for rendering" ), 5 );
+  QgsDebugMsg( QStringLiteral( "Preparing list of layer jobs for rendering" ) );
   QTime prepareTime;
   prepareTime.start();
 
@@ -103,7 +103,7 @@ void QgsMapRendererCustomPainterJob::start()
   mLayerJobs = prepareJobs( mPainter, mLabelingEngineV2.get() );
   mLabelJob = prepareLabelingJob( mPainter, mLabelingEngineV2.get(), canUseLabelCache );
 
-  QgsDebugMsgLevel( QStringLiteral( "Rendering prepared in (seconds): %1" ).arg( prepareTime.elapsed() / 1000.0 ), 4 );
+  QgsDebugMsg( QStringLiteral( "Rendering prepared in (seconds): %1" ).arg( prepareTime.elapsed() / 1000.0 ) );
 
   if ( mRenderSynchronously )
   {
@@ -127,11 +127,11 @@ void QgsMapRendererCustomPainterJob::cancel()
 {
   if ( !isActive() )
   {
-    QgsDebugMsgLevel( QStringLiteral( "QPAINTER not running!" ), 4 );
+    QgsDebugMsg( QStringLiteral( "QPAINTER not running!" ) );
     return;
   }
 
-  QgsDebugMsgLevel( QStringLiteral( "QPAINTER canceling" ), 5 );
+  QgsDebugMsg( QStringLiteral( "QPAINTER canceling" ) );
   disconnect( &mFutureWatcher, &QFutureWatcher<void>::finished, this, &QgsMapRendererCustomPainterJob::futureFinished );
   cancelWithoutBlocking();
 
@@ -140,11 +140,11 @@ void QgsMapRendererCustomPainterJob::cancel()
 
   mFutureWatcher.waitForFinished();
 
-  QgsDebugMsgLevel( QStringLiteral( "QPAINER cancel waited %1 ms" ).arg( t.elapsed() / 1000.0 ), 5 );
+  QgsDebugMsg( QStringLiteral( "QPAINER cancel waited %1 ms" ).arg( t.elapsed() / 1000.0 ) );
 
   futureFinished();
 
-  QgsDebugMsgLevel( QStringLiteral( "QPAINTER canceled" ), 5 );
+  QgsDebugMsg( QStringLiteral( "QPAINTER canceled" ) );
 }
 
 void QgsMapRendererCustomPainterJob::cancelWithoutBlocking()
@@ -176,7 +176,7 @@ void QgsMapRendererCustomPainterJob::waitForFinished()
 
   mFutureWatcher.waitForFinished();
 
-  QgsDebugMsgLevel( QStringLiteral( "waitForFinished: %1 ms" ).arg( t.elapsed() / 1000.0 ), 4 );
+  QgsDebugMsg( QStringLiteral( "waitForFinished: %1 ms" ).arg( t.elapsed() / 1000.0 ) );
 
   futureFinished();
 }
@@ -241,7 +241,7 @@ void QgsMapRendererCustomPainterJob::futureFinished()
   mActive = false;
   if ( !mPrepared ) // can't access from other thread
     mRenderingTime = mRenderingStart.elapsed();
-  QgsDebugMsgLevel( QStringLiteral( "QPAINTER futureFinished" ), 5 );
+  QgsDebugMsg( QStringLiteral( "QPAINTER futureFinished" ) );
 
   if ( !mPrepared )
     logRenderingTime( mLayerJobs, mLabelJob );
@@ -278,7 +278,7 @@ void QgsMapRendererCustomPainterJob::staticRender( QgsMapRendererCustomPainterJo
 
 void QgsMapRendererCustomPainterJob::doRender()
 {
-  QgsDebugMsgLevel( QStringLiteral( "Starting to render layer stack." ), 5 );
+  QgsDebugMsg( QStringLiteral( "Starting to render layer stack." ) );
   QTime renderTime;
   renderTime.start();
 
@@ -322,7 +322,7 @@ void QgsMapRendererCustomPainterJob::doRender()
 
   }
 
-  QgsDebugMsgLevel( QStringLiteral( "Done rendering map layers" ), 5 );
+  QgsDebugMsg( QStringLiteral( "Done rendering map layers" ) );
 
   if ( mSettings.testFlag( QgsMapSettings::DrawLabeling ) && !mLabelJob.context.renderingStopped() )
   {
@@ -357,7 +357,7 @@ void QgsMapRendererCustomPainterJob::doRender()
     mPainter->drawImage( 0, 0, *mLabelJob.img );
   }
 
-  QgsDebugMsgLevel( QStringLiteral( "Rendering completed in (seconds): %1" ).arg( renderTime.elapsed() / 1000.0 ), 2 );
+  QgsDebugMsg( QStringLiteral( "Rendering completed in (seconds): %1" ).arg( renderTime.elapsed() / 1000.0 ) );
 }
 
 
