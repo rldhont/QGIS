@@ -178,6 +178,7 @@ void QgsVectorLayerLabelProvider::registerFeature( const QgsFeature &feature, Qg
 
 QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &fet, QgsRenderContext &context, const QgsSymbolList &symbols )
 {
+  QgsDebugMsg( QStringLiteral( "QgsVectorLayerLabelProvider::getPointObstacleGeometry - Start for feature %1." ).arg( fet.id() ) );
   if ( !fet.hasGeometry() || fet.geometry().type() != QgsWkbTypes::PointGeometry )
     return QgsGeometry();
 
@@ -187,6 +188,7 @@ QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &f
     obstacleGeom = qgis::make_unique< QgsMultiPolygon >();
 
   // for each point
+  QgsDebugMsg( QStringLiteral( "Start loop for each point of feature %1." ).arg( fet.id() ) );
   for ( int i = 0; i < fet.geometry().constGet()->nCoordinates(); ++i )
   {
     QRectF bounds;
@@ -196,6 +198,7 @@ QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &f
     double z = 0; // dummy variable for coordinate transforms
 
     //transform point to pixels
+    QgsDebugMsg( QStringLiteral( "Before transform point %2 to pixels of feature %1." ).arg( fet.id(), i ) );
     if ( context.coordinateTransform().isValid() )
     {
       try
@@ -208,7 +211,9 @@ QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &f
       }
     }
     context.mapToPixel().transformInPlace( x, y );
+    QgsDebugMsg( QStringLiteral( "After transform point %2 to pixels of feature %1." ).arg( fet.id(), i ) );
 
+    QgsDebugMsg( QStringLiteral( "Before get point %2 symbol bounds of feature %1." ).arg( fet.id(), i ) );
     QPointF pt( x, y );
     const auto constSymbols = symbols;
     for ( QgsSymbol *symbol : constSymbols )
@@ -221,16 +226,20 @@ QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &f
           bounds = static_cast< QgsMarkerSymbol * >( symbol )->bounds( pt, context, fet );
       }
     }
+    QgsDebugMsg( QStringLiteral( "After get point %2 symbol bounds of feature %1." ).arg( fet.id(), i ) );
 
     //convert bounds to a geometry
+    QgsDebugMsg( QStringLiteral( "Before convert bounds %2 to a geometry of feature %1." ).arg( fet.id(), i ) );
     QVector< double > bX;
     bX << bounds.left() << bounds.right() << bounds.right() << bounds.left();
     QVector< double > bY;
     bY << bounds.top() << bounds.top() << bounds.bottom() << bounds.bottom();
     std::unique_ptr< QgsLineString > boundLineString = qgis::make_unique< QgsLineString >( bX, bY );
+    QgsDebugMsg( QStringLiteral( "After convert bounds %2 to a geometry of feature %1." ).arg( fet.id(), i ) );
 
     //then transform back to map units
     //TODO - remove when labeling is refactored to use screen units
+    QgsDebugMsg( QStringLiteral( "Before then transform point %2 back to map units of feature %1." ).arg( fet.id(), i ) );
     for ( int i = 0; i < boundLineString->numPoints(); ++i )
     {
       QgsPointXY point = context.mapToPixel().toMapCoordinates( static_cast<int>( boundLineString->xAt( i ) ),
@@ -250,7 +259,9 @@ QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &f
       }
     }
     boundLineString->close();
+    QgsDebugMsg( QStringLiteral( "After then transform point %2 back to map units of feature %1." ).arg( fet.id(), i ) );
 
+    QgsDebugMsg( QStringLiteral( "Before coordinate transforms may have resulted in nan coordinates - if so, strip these out for point %2 of feature %1." ).arg( fet.id(), i ) );
     if ( context.coordinateTransform().isValid() )
     {
       // coordinate transforms may have resulted in nan coordinates - if so, strip these out
@@ -261,6 +272,7 @@ QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &f
       if ( !boundLineString->isRing() )
         return QgsGeometry();
     }
+    QgsDebugMsg( QStringLiteral( "After coordinate transforms may have resulted in nan coordinates - if so, strip these out for point %2 of feature %1." ).arg( fet.id(), i ) );
 
     std::unique_ptr< QgsPolygon > obstaclePolygon = qgis::make_unique< QgsPolygon >();
     obstaclePolygon->setExteriorRing( boundLineString.release() );
@@ -274,7 +286,9 @@ QgsGeometry QgsVectorLayerLabelProvider::getPointObstacleGeometry( QgsFeature &f
       obstacleGeom = std::move( obstaclePolygon );
     }
   }
+  QgsDebugMsg( QStringLiteral( "End loop for each point of feature %1." ).arg( fet.id() ) );
 
+  QgsDebugMsg( QStringLiteral( "QgsVectorLayerLabelProvider::getPointObstacleGeometry - End for feature %1." ).arg( fet.id() ) );
   return QgsGeometry( std::move( obstacleGeom ) );
 }
 
