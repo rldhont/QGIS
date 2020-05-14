@@ -323,12 +323,16 @@ void QgsVectorLayerRenderer::drawRenderer( QgsFeatureIterator &fit )
       bool drawMarker = ( mDrawVertexMarkers && context.drawEditingInformation() && ( !mVertexMarkerOnlyForSelection || sel ) );
 
       // render feature
+      QgsDebugMsg( QStringLiteral( "Before render feature %1." ).arg( fet.id() ) );
       bool rendered = mRenderer->renderFeature( fet, context, -1, sel, drawMarker );
+      QgsDebugMsg( QStringLiteral( "After render feature %1." ).arg( fet.id() ) );
 
       // labeling - register feature
       if ( rendered )
       {
+        QgsDebugMsg( QStringLiteral( "The feature %1 has been rendered" ).arg( fet.id() ) );
         // new labeling engine
+        QgsDebugMsg( QStringLiteral( "Before labeling feature %1." ).arg( fet.id() ) );
         if ( context.labelingEngine() && ( mLabelProvider || mDiagramProvider ) )
         {
           QgsGeometry obstacleGeometry;
@@ -354,6 +358,7 @@ void QgsVectorLayerRenderer::drawRenderer( QgsFeatureIterator &fit )
             mDiagramProvider->registerFeature( fet, context, obstacleGeometry );
           }
         }
+        QgsDebugMsg( QStringLiteral( "After labeling feature %1." ).arg( fet.id() ) );
       }
       QgsDebugMsg( QStringLiteral( "End drawing feature %1." ).arg( fet.id() ) );
     }
