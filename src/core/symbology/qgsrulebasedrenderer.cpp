@@ -553,6 +553,7 @@ void QgsRuleBasedRenderer::Rule::setNormZLevels( const QMap<int, int> &zLevelsTo
 
 QgsRuleBasedRenderer::Rule::RenderResult QgsRuleBasedRenderer::Rule::renderFeature( QgsRuleBasedRenderer::FeatureToRender &featToRender, QgsRenderContext &context, QgsRuleBasedRenderer::RenderQueue &renderQueue )
 {
+  QgsDebugMsg( QStringLiteral( "QgsRuleBasedRenderer::Rule::renderFeature - Start render feature %1." ).arg( featToRender.feat.id() ) );
   if ( !isFilterOK( featToRender.feat, &context ) )
     return Filtered;
 
@@ -596,6 +597,7 @@ QgsRuleBasedRenderer::Rule::RenderResult QgsRuleBasedRenderer::Rule::renderFeatu
       rendered |= rule->renderFeature( featToRender, context, renderQueue ) == Rendered;
     }
   }
+  QgsDebugMsg( QStringLiteral( "QgsRuleBasedRenderer::Rule::renderFeature - End render feature %1." ).arg( featToRender.feat.id() ) );
   if ( !mIsActive || ( mSymbol && !rendered ) )
     return Inactive;
   else if ( rendered )
@@ -933,13 +935,16 @@ bool QgsRuleBasedRenderer::renderFeature( const QgsFeature &feature,
     bool selected,
     bool drawVertexMarker )
 {
+  QgsDebugMsg( QStringLiteral( "QgsRuleBasedRenderer::renderFeature - Start render feature %1." ).arg( feature.id() ) );
   Q_UNUSED( layer )
 
   int flags = ( selected ? FeatIsSelected : 0 ) | ( drawVertexMarker ? FeatDrawMarkers : 0 );
   mCurrentFeatures.append( FeatureToRender( feature, flags ) );
 
   // check each active rule
-  return mRootRule->renderFeature( mCurrentFeatures.last(), context, mRenderQueue ) == Rule::Rendered;
+  bool result = mRootRule->renderFeature( mCurrentFeatures.last(), context, mRenderQueue ) == Rule::Rendered;
+  QgsDebugMsg( QStringLiteral( "QgsRuleBasedRenderer::renderFeature - End render feature %1." ).arg( feature.id() ) );
+  return result;
 }
 
 
