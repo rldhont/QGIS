@@ -336,26 +336,36 @@ void QgsVectorLayerRenderer::drawRenderer( QgsFeatureIterator &fit )
         if ( context.labelingEngine() && ( mLabelProvider || mDiagramProvider ) )
         {
           QgsGeometry obstacleGeometry;
+          QgsDebugMsg( QStringLiteral( "Before original symbols for feature %1." ).arg( fet.id() ) );
           QgsSymbolList symbols = mRenderer->originalSymbolsForFeature( fet, context );
+          QgsDebugMsg( QStringLiteral( "After original symbols for feature %1." ).arg( fet.id() ) );
           QgsSymbol *symbol = nullptr;
           if ( !symbols.isEmpty() && fet.geometry().type() == QgsWkbTypes::PointGeometry )
           {
+            QgsDebugMsg( QStringLiteral( "Before getPointObstacleGeometry for feature %1." ).arg( fet.id() ) );
             obstacleGeometry = QgsVectorLayerLabelProvider::getPointObstacleGeometry( fet, context, symbols );
+            QgsDebugMsg( QStringLiteral( "After getPointObstacleGeometry for feature %1." ).arg( fet.id() ) );
           }
 
           if ( !symbols.isEmpty() )
           {
+            QgsDebugMsg( QStringLiteral( "Before updateSymbolScope for feature %1." ).arg( fet.id() ) );
             symbol = symbols.at( 0 );
             QgsExpressionContextUtils::updateSymbolScope( symbol, symbolScope );
+            QgsDebugMsg( QStringLiteral( "After updateSymbolScope for feature %1." ).arg( fet.id() ) );
           }
 
           if ( mLabelProvider )
           {
+            QgsDebugMsg( QStringLiteral( "Before mLabelProvider->registerFeature for feature %1." ).arg( fet.id() ) );
             mLabelProvider->registerFeature( fet, context, obstacleGeometry, symbol );
+            QgsDebugMsg( QStringLiteral( "After mLabelProvider->registerFeature for feature %1." ).arg( fet.id() ) );
           }
           if ( mDiagramProvider )
           {
+            QgsDebugMsg( QStringLiteral( "Before mDiagramProvider->registerFeature for feature %1." ).arg( fet.id() ) );
             mDiagramProvider->registerFeature( fet, context, obstacleGeometry );
+            QgsDebugMsg( QStringLiteral( "After mDiagramProvider->registerFeature for feature %1." ).arg( fet.id() ) );
           }
         }
         QgsDebugMsg( QStringLiteral( "After labeling feature %1." ).arg( fet.id() ) );
