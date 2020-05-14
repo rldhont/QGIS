@@ -118,15 +118,20 @@ bool QgsFeatureRenderer::filterNeedsGeometry() const
 
 bool QgsFeatureRenderer::renderFeature( const QgsFeature &feature, QgsRenderContext &context, int layer, bool selected, bool drawVertexMarker )
 {
+  QgsDebugMsg( QStringLiteral( "QgsFeatureRenderer::renderFeature - Start render feature %1." ).arg( feature.id() ) );
 #ifdef QGISDEBUG
   Q_ASSERT_X( mThread == QThread::currentThread(), "QgsFeatureRenderer::renderFeature", "renderFeature called in a different thread - use a cloned renderer instead" );
 #endif
 
   QgsSymbol *symbol = symbolForFeature( feature, context );
   if ( !symbol )
+  {
+    QgsDebugMsg( QStringLiteral( "QgsFeatureRenderer::renderFeature - No symbol for feature %1." ).arg( feature.id() ) );
     return false;
+  }
 
   renderFeatureWithSymbol( feature, symbol, context, layer, selected, drawVertexMarker );
+  QgsDebugMsg( QStringLiteral( "QgsFeatureRenderer::renderFeature - End render feature %1." ).arg( feature.id() ) );
   return true;
 }
 
