@@ -216,9 +216,11 @@ QByteArray QgsSvgCache::svgContent( const QString &path, double size, const QCol
 QSizeF QgsSvgCache::svgViewboxSize( const QString &path, double size, const QColor &fill, const QColor &stroke, double strokeWidth,
                                     double widthScaleFactor, double fixedAspectRatio, bool blocking )
 {
+  QgsDebugMsg( QStringLiteral( "QgsSvgCache::svgViewboxSize - Start for %1." ).arg( path ) );
   QMutexLocker locker( &mMutex );
 
   QgsSvgCacheEntry *currentEntry = cacheEntry( path, size, fill, stroke, strokeWidth, widthScaleFactor, fixedAspectRatio, blocking );
+  QgsDebugMsg( QStringLiteral( "QgsSvgCache::svgViewboxSize - End for %1." ).arg( path ) );
   return currentEntry->viewboxSize;
 }
 
@@ -467,6 +469,7 @@ void QgsSvgCache::cachePicture( QgsSvgCacheEntry *entry, bool forceVectorOutput 
 QgsSvgCacheEntry *QgsSvgCache::cacheEntry( const QString &path, double size, const QColor &fill, const QColor &stroke, double strokeWidth,
     double widthScaleFactor, double fixedAspectRatio, bool blocking )
 {
+  QgsDebugMsg( QStringLiteral( "QgsSvgCache::cacheEntry - Start for %1." ).arg( path ) );
   QgsSvgCacheEntry *currentEntry = findExistingEntry( new QgsSvgCacheEntry( path, size, strokeWidth, widthScaleFactor, fill, stroke, fixedAspectRatio ) );
 
   if ( currentEntry->svgContent.isEmpty() )
@@ -474,6 +477,7 @@ QgsSvgCacheEntry *QgsSvgCache::cacheEntry( const QString &path, double size, con
     replaceParamsAndCacheSvg( currentEntry, blocking );
   }
 
+  QgsDebugMsg( QStringLiteral( "QgsSvgCache::cacheEntry - End for %1." ).arg( path ) );
   return currentEntry;
 }
 
