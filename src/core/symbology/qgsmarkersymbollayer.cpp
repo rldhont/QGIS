@@ -251,24 +251,36 @@ void QgsSimpleMarkerSymbolLayerBase::renderPoint( QPointF point, QgsSymbolRender
 
 QRectF QgsSimpleMarkerSymbolLayerBase::bounds( QPointF point, QgsSymbolRenderContext &context )
 {
+  QgsDebugMsg( QStringLiteral( "QgsSimpleMarkerSymbolLayerBase::bounds - Start." ) );
   bool hasDataDefinedSize = false;
+  QgsDebugMsg( QStringLiteral( "Before calculate size." ) );
   double scaledSize = calculateSize( context, hasDataDefinedSize );
+  QgsDebugMsg( QStringLiteral( "After calculate size." ) );
 
   bool hasDataDefinedRotation = false;
   QPointF offset;
   double angle = 0;
+  QgsDebugMsg( QStringLiteral( "Before calculate offset and rotation." ) );
   calculateOffsetAndRotation( context, scaledSize, hasDataDefinedRotation, offset, angle );
+  QgsDebugMsg( QStringLiteral( "After calculate offset and rotation." ) );
 
+  QgsDebugMsg( QStringLiteral( "Before convert to painter units." ) );
   scaledSize = context.renderContext().convertToPainterUnits( scaledSize, mSizeUnit, mSizeMapUnitScale );
+  QgsDebugMsg( QStringLiteral( "After convert to painter units." ) );
 
   QTransform transform;
 
   // move to the desired position
+  QgsDebugMsg( QStringLiteral( "Before translate." ) );
   transform.translate( point.x() + offset.x(), point.y() + offset.y() );
+  QgsDebugMsg( QStringLiteral( "After translate." ) );
 
+  QgsDebugMsg( QStringLiteral( "Before rotate." ) );
   if ( !qgsDoubleNear( angle, 0.0 ) )
     transform.rotate( angle );
+  QgsDebugMsg( QStringLiteral( "After rotate." ) );
 
+  QgsDebugMsg( QStringLiteral( "QgsSimpleMarkerSymbolLayerBase::bounds - End." ) );
   return transform.mapRect( QRectF( -scaledSize / 2.0,
                                     -scaledSize / 2.0,
                                     scaledSize,
@@ -2494,9 +2506,14 @@ bool QgsSvgMarkerSymbolLayer::writeDxf( QgsDxfExport &e, double mmMapUnitScaleFa
 
 QRectF QgsSvgMarkerSymbolLayer::bounds( QPointF point, QgsSymbolRenderContext &context )
 {
+  QgsDebugMsg( QStringLiteral( "QgsSvgMarkerSymbolLayer::bounds - Start." ) );
   bool hasDataDefinedSize = false;
+  QgsDebugMsg( QStringLiteral( "Before calculate size." ) );
   double scaledSize = calculateSize( context, hasDataDefinedSize );
+  QgsDebugMsg( QStringLiteral( "After calculate size." ) );
+  QgsDebugMsg( QStringLiteral( "Before convert to painter units." ) );
   scaledSize = context.renderContext().convertToPainterUnits( scaledSize, mSizeUnit, mSizeMapUnitScale );
+  QgsDebugMsg( QStringLiteral( "Before convert to painter units." ) );
 
   //don't render symbols with size below one or above 10,000 pixels
   if ( static_cast< int >( scaledSize ) < 1 || 10000.0 < scaledSize )
@@ -2506,7 +2523,9 @@ QRectF QgsSvgMarkerSymbolLayer::bounds( QPointF point, QgsSymbolRenderContext &c
 
   QPointF outputOffset;
   double angle = 0.0;
+  QgsDebugMsg( QStringLiteral( "Before calculate offset and rotation." ) );
   calculateOffsetAndRotation( context, scaledSize, outputOffset, angle );
+  QgsDebugMsg( QStringLiteral( "Before calculate offset and rotation." ) );
 
   QString path = mPath;
   if ( mDataDefinedProperties.isActive( QgsSymbolLayer::PropertyName ) )
@@ -2539,9 +2558,11 @@ QRectF QgsSvgMarkerSymbolLayer::bounds( QPointF point, QgsSymbolRenderContext &c
     fillColor = mDataDefinedProperties.valueAsColor( QgsSymbolLayer::PropertyStrokeColor, context.renderContext().expressionContext(), mStrokeColor );
   }
 
+  QgsDebugMsg( QStringLiteral( "Before svg viewbox size." ) );
   QSizeF svgViewbox = QgsApplication::svgCache()->svgViewboxSize( path, scaledSize, fillColor, strokeColor, strokeWidth,
                       context.renderContext().scaleFactor(), mFixedAspectRatio,
                       ( context.renderContext().flags() & QgsRenderContext::RenderBlocking ) );
+  QgsDebugMsg( QStringLiteral( "After svg viewbox size." ) );
 
   double scaledHeight = svgViewbox.isValid() ? scaledSize * svgViewbox.height() / svgViewbox.width() : scaledSize;
 
@@ -2565,6 +2586,7 @@ QRectF QgsSvgMarkerSymbolLayer::bounds( QPointF point, QgsSymbolRenderContext &c
   symbolBounds.adjust( -strokeWidth / 2.0, -strokeWidth / 2.0,
                        strokeWidth / 2.0, strokeWidth / 2.0 );
 
+  QgsDebugMsg( QStringLiteral( "QgsSvgMarkerSymbolLayer::bounds - End." ) );
   return symbolBounds;
 
 }
