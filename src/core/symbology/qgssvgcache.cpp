@@ -287,24 +287,32 @@ void QgsSvgCache::containsParams( const QString &path,
 
 void QgsSvgCache::replaceParamsAndCacheSvg( QgsSvgCacheEntry *entry, bool blocking )
 {
+  QgsDebugMsg( QStringLiteral( "QgsSvgCache::replaceParamsAndCacheSvg - Start for %1." ).arg( entry->path ) );
+  QgsDebugMsg( QStringLiteral( "QgsSvgCache::replaceParamsAndCacheSvg - Blocking param %1." ).arg( blocking ) );
   if ( !entry )
   {
     return;
   }
 
   QDomDocument svgDoc;
+  QgsDebugMsg( QStringLiteral( "Before getContent for %1." ).arg( entry->path ) );
   if ( !svgDoc.setContent( getContent( entry->path, mMissingSvg, mFetchingSvg, blocking ) ) )
   {
     return;
   }
+  QgsDebugMsg( QStringLiteral( "After getContent for %1." ).arg( entry->path ) );
 
   //replace fill color, stroke color, stroke with in all nodes
   QDomElement docElem = svgDoc.documentElement();
 
   QSizeF viewboxSize;
+  QgsDebugMsg( QStringLiteral( "Before calcSizeScaleFactor for %1." ).arg( entry->path ) );
   double sizeScaleFactor = calcSizeScaleFactor( entry, docElem, viewboxSize );
+  QgsDebugMsg( QStringLiteral( "After calcSizeScaleFactor for %1." ).arg( entry->path ) );
   entry->viewboxSize = viewboxSize;
+  QgsDebugMsg( QStringLiteral( "Before replaceElemParams for %1." ).arg( entry->path ) );
   replaceElemParams( docElem, entry->fill, entry->stroke, entry->strokeWidth * sizeScaleFactor );
+  QgsDebugMsg( QStringLiteral( "After replaceElemParams for %1." ).arg( entry->path ) );
 
   entry->svgContent = svgDoc.toByteArray( 0 );
 
@@ -314,6 +322,7 @@ void QgsSvgCache::replaceParamsAndCacheSvg( QgsSvgCacheEntry *entry, bool blocki
   entry->svgContent.replace( "</tspan>\n", "</tspan>" );
 
   mTotalSize += entry->svgContent.size();
+  QgsDebugMsg( QStringLiteral( "QgsSvgCache::replaceParamsAndCacheSvg - End for %1." ).arg( entry->path ) );
 }
 
 double QgsSvgCache::calcSizeScaleFactor( QgsSvgCacheEntry *entry, const QDomElement &docElem, QSizeF &viewboxSize ) const
