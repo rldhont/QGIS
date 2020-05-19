@@ -441,7 +441,7 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
 
     void onRemoteContentFetched( const QString &url, bool success ) override
     {
-      QgsMessageLog::logMessage( tr( "%2 onRemoteContentFetched %1" ).arg( path, mTypeString ), mTypeString );
+      QgsMessageLog::logMessage( tr( "%2 onRemoteContentFetched %1" ).arg( url, mTypeString ), mTypeString );
       QMutexLocker locker( &mMutex );
       mPendingRemoteUrls.remove( url );
 
