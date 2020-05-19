@@ -259,6 +259,8 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
      */
     QByteArray getContent( const QString &path, const QByteArray &missingContent, const QByteArray &fetchingContent, bool blocking = false ) const
     {
+      QgsMessageLog::logMessage( tr( "%2 start getContent %1" ).arg( path, mTypeString ), mTypeString );
+      QgsMessageLog::logMessage( tr( "getContent - Blocking param %1." ).arg( blocking ) );
       // is it a path to local file?
       QFile file( path );
       if ( file.exists() )
@@ -287,10 +289,12 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
       }
 
       QUrl url( path );
+      QgsMessageLog::logMessage( tr( "%2 Before test url valid %1" ).arg( path, mTypeString ), mTypeString );
       if ( !url.isValid() )
       {
         return missingContent;
       }
+      QgsMessageLog::logMessage( tr( "%2 After test url valid %1" ).arg( path, mTypeString ), mTypeString );
 
       // check whether it's a url pointing to a local file
       if ( url.scheme().compare( QLatin1String( "file" ), Qt::CaseInsensitive ) == 0 )
@@ -313,11 +317,13 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
       // already a request in progress for this url
       if ( mPendingRemoteUrls.contains( path ) )
       {
+        QgsMessageLog::logMessage( tr( "%2 Already a request in progress for this url %1" ).arg( path, mTypeString ), mTypeString );
         // it's a non blocking request so return fetching content
         if ( !blocking )
         {
           return fetchingContent;
         }
+        QgsMessageLog::logMessage( tr( "%2 It's a blocking request for this url %1" ).arg( path, mTypeString ), mTypeString );
 
         // it's a blocking request so try to find the task and wait for task finished
         const auto constActiveTasks = QgsApplication::taskManager()->activeTasks();
@@ -328,17 +334,20 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
           {
             continue;
           }
+          QgsMessageLog::logMessage( tr( "%2 The network content fetcher task's description ends with the url %1" ).arg( path, mTypeString ), mTypeString );
 
           // cast task to network content fetcher task
           QgsNetworkContentFetcherTask *ncfTask = qobject_cast<QgsNetworkContentFetcherTask *>( task );
           if ( ncfTask )
           {
             // wait for task finished
+            QgsMessageLog::logMessage( tr( "%2 Wait for task finished for the url %1" ).arg( path, mTypeString ), mTypeString );
             if ( waitForTaskFinished( ncfTask ) )
             {
               if ( mRemoteContentCache.contains( path ) )
               {
                 // We got the file!
+                QgsMessageLog::logMessage( tr( "%2 We got the file for the url %1" ).arg( path, mTypeString ), mTypeString );
                 return *mRemoteContentCache[ path ];
               }
             }
@@ -353,9 +362,11 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
       if ( mRemoteContentCache.contains( path ) )
       {
         // already fetched this content - phew. Just return what we already got.
+        QgsMessageLog::logMessage( tr( "%2 Already fetched this content for the url %1" ).arg( path, mTypeString ), mTypeString );
         return *mRemoteContentCache[ path ];
       }
 
+      QgsMessageLog::logMessage( tr( "%2 Create task for the url %1" ).arg( path, mTypeString ), mTypeString );
       mPendingRemoteUrls.insert( path );
       //fire up task to fetch content in background
       QNetworkRequest request( url );
@@ -412,11 +423,13 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
       // if blocking, wait for finished
       if ( blocking )
       {
+        QgsMessageLog::logMessage( tr( "%2 Wait for finished for the url %1" ).arg( path, mTypeString ), mTypeString );
         if ( waitForTaskFinished( task ) )
         {
           if ( mRemoteContentCache.contains( path ) )
           {
             // We got the file!
+            QgsMessageLog::logMessage( tr( "%2 We got the file for the url %1" ).arg( path, mTypeString ), mTypeString );
             return *mRemoteContentCache[ path ];
           }
         }
