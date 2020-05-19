@@ -259,7 +259,7 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
      */
     QByteArray getContent( const QString &path, const QByteArray &missingContent, const QByteArray &fetchingContent, bool blocking = false ) const
     {
-      QgsMessageLog::logMessage( tr( "%2 start getContent %1" ).arg( path, mTypeString ), mTypeString );
+      QgsMessageLog::logMessage( tr( "%2 getContent %1" ).arg( path, mTypeString ), mTypeString );
       QgsMessageLog::logMessage( tr( "getContent - Blocking param %1." ).arg( blocking ) );
       // is it a path to local file?
       QFile file( path );
@@ -357,6 +357,7 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
         }
         // if no content returns the content is probably in remote content cache
         // or a new task will be created
+        QgsMessageLog::logMessage( tr( "%2 No content returns for the url %1" ).arg( path, mTypeString ), mTypeString );
       }
 
       if ( mRemoteContentCache.contains( path ) )
@@ -426,6 +427,7 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
         QgsMessageLog::logMessage( tr( "%2 Wait for finished for the url %1" ).arg( path, mTypeString ), mTypeString );
         if ( waitForTaskFinished( task ) )
         {
+          QgsMessageLog::logMessage( tr( "%2 Task is finished for the url %1" ).arg( path, mTypeString ), mTypeString );
           if ( mRemoteContentCache.contains( path ) )
           {
             // We got the file!
@@ -439,6 +441,7 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
 
     void onRemoteContentFetched( const QString &url, bool success ) override
     {
+      QgsMessageLog::logMessage( tr( "%2 onRemoteContentFetched %1" ).arg( path, mTypeString ), mTypeString );
       QMutexLocker locker( &mMutex );
       mPendingRemoteUrls.remove( url );
 
