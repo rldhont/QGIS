@@ -474,18 +474,28 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
      */
     bool waitForTaskFinished( QgsNetworkContentFetcherTask *task ) const
     {
+      QgsMessageLog::logMessage( tr( "%1 Start wait for task finished" ).arg( mTypeString ), mTypeString );
+      QgsMessageLog::logMessage( tr( "Task status %1" ).arg( task->status() ), mTypeString );
+      bool waitForBegun = ( task->status() != QgsTask::Running
+                            && task->status() != QgsTask::Complete
+                            && task->status() != QgsTask::Terminated );
+      QgsMessageLog::logMessage( tr( "Wait for task begun %1" ).arg( waitForBegun ), mTypeString );
       // First step, waiting for task running
-      if ( task->status() != QgsTask::Running )
+      if ( waitForBegun )
       {
+        QgsMessageLog::logMessage( tr( "%1 Start loop to wait begun wait for task finished" ).arg( mTypeString ), mTypeString );
         QEventLoop loop;
         connect( task, &QgsNetworkContentFetcherTask::begun, &loop, &QEventLoop::quit );
-        if ( task->status() != QgsTask::Running )
+        if ( waitForBegun )
           loop.exec();
+        QgsMessageLog::logMessage( tr( "%1 End loop to wait begun wait for task finished" ).arg( mTypeString ), mTypeString );
       }
 
       // Second step, wait 5 seconds for task finished
+      QgsMessageLog::logMessage( tr( "%1 Really wait for task finished" ).arg( mTypeString ), mTypeString );
       if ( task->waitForFinished( 5000 ) )
       {
+        QgsMessageLog::logMessage( tr( "%1 The wait for task finished did not time out" ).arg( mTypeString ), mTypeString );
         // The wait did not time out
         // Third step, check status as complete
         if ( task->status() == QgsTask::Complete )
@@ -495,6 +505,7 @@ class CORE_EXPORT QgsAbstractContentCache : public QgsAbstractContentCacheBase
           return true;
         }
       }
+      QgsMessageLog::logMessage( tr( "%1 The wait for task finished timed out" ).arg( mTypeString ), mTypeString );
       return false;
     }
 
