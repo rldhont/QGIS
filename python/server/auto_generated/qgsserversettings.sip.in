@@ -196,7 +196,6 @@ variable QGIS_SERVER_TRUST_LAYER_METADATA.
 .. versionadded:: 3.16
 %End
 
-
 };
 
 /************************************************************************

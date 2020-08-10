@@ -445,3 +445,8 @@ bool QgsServerSettings::ignoreBadLayers() const
 {
   return value( QgsServerSettingsEnv::QGIS_SERVER_IGNORE_BAD_LAYERS ).toBool();
 }
+
+bool QgsServerSettings::trustLayerMetadata() const
+{
+  return value( QgsServerSettingsEnv::QGIS_SERVER_TRUST_LAYER_METADATA ).toBool();
+}
