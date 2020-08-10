@@ -234,6 +234,16 @@ class SERVER_EXPORT QgsServerSettings
      */
     bool ignoreBadLayers() const;
 
+    /**
+     * Returns TRUE if the reading flag trust layer metadata is activated.
+     *
+     * The default value is FALSE, this value can be changed by setting the environment
+     * variable QGIS_SERVER_TRUST_LAYER_METADATA.
+     *
+     * \since QGIS 3.16
+     */
+    bool trustLayerMetadata() const;
+
   private:
     void initSettings();
     QVariant value( QgsServerSettingsEnv::EnvVar envVar ) const;
