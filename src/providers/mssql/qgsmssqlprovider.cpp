@@ -1741,7 +1741,8 @@ QgsVectorDataProvider::Capabilities QgsMssqlProvider::capabilities() const
     cap |= ChangeGeometries;
 
   return cap | DeleteFeatures | ChangeAttributeValues | DeleteAttributes |
-         QgsVectorDataProvider::SelectAtId;
+         QgsVectorDataProvider::SelectAtId |
+         QgsVectorDataProvider::CanUseEstimatedMetadata;
 }
 
 bool QgsMssqlProvider::createSpatialIndex()

@@ -54,6 +54,10 @@ of feature and attribute information from a spatial datasource.
       CreateRenderer,
       CreateLabeling,
       ReloadData,
+      CanDisableSelectAtId,
+      CanUseEstimatedMetadata,
+      CanDisableCheckPrimaryKeyUnicity,
+      CanUseMultiFieldPrimaryKey,
     };
 
     typedef QFlags<QgsVectorDataProvider::Capability> Capabilities;
