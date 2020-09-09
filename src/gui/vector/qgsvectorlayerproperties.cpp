@@ -301,8 +301,8 @@ QgsVectorLayerProperties::QgsVectorLayerProperties(
     cbxSelectAtId->setEnabled( false );
     cbxCheckPrimaryKeyUnicity->setEnabled( false );
     pbnDcUnlock->setEnabled( true );
-    pbnDcCancel->setEnabled( false );
-    pbnDcApply->setEnabled( false );
+    pbnDcReset->setEnabled( false );
+    pbnDcUpdate->setEnabled( false );
     if ( !( capabilities & QgsVectorDataProvider::CanDisableSelectAtId ) &&
          !( capabilities & QgsVectorDataProvider::CanUseEstimatedMetadata ) &&
          !( capabilities & QgsVectorDataProvider::CanDisableCheckPrimaryKeyUnicity ) )
@@ -361,8 +361,8 @@ QgsVectorLayerProperties::QgsVectorLayerProperties(
     }
   }
   connect( pbnDcUnlock, &QAbstractButton::clicked, this, &QgsVectorLayerProperties::pbnDcUnlock_clicked );
-  connect( pbnDcCancel, &QAbstractButton::clicked, this, &QgsVectorLayerProperties::pbnDcCancel_clicked );
-  connect( pbnDcApply, &QAbstractButton::clicked, this, &QgsVectorLayerProperties::pbnDcApply_clicked );
+  connect( pbnDcReset, &QAbstractButton::clicked, this, &QgsVectorLayerProperties::pbnDcReset_clicked );
+  connect( pbnDcUpdate, &QAbstractButton::clicked, this, &QgsVectorLayerProperties::pbnDcUpdate_clicked );
 
   mCrsSelector->setCrs( mLayer->crs() );
 
@@ -1910,12 +1910,12 @@ void QgsVectorLayerProperties::pbnDcUnlock_clicked()
   cbxUseEstimatedMetadata->setEnabled( true );
   cbxSelectAtId->setEnabled( true );
   cbxCheckPrimaryKeyUnicity->setEnabled( true );
-  pbnDcCancel->setEnabled( true );
-  pbnDcApply->setEnabled( true );
+  pbnDcReset->setEnabled( true );
+  pbnDcUpdate->setEnabled( true );
   pbnDcUnlock->setEnabled( false );
 }
 
-void QgsVectorLayerProperties::pbnDcCancel_clicked()
+void QgsVectorLayerProperties::pbnDcReset_clicked()
 {
   const QgsDataSourceUri uri = mLayer->dataProvider()->uri();
   QgsVectorDataProvider::Capabilities capabilities = mLayer->dataProvider()->capabilities();
@@ -1941,11 +1941,11 @@ void QgsVectorLayerProperties::pbnDcCancel_clicked()
   cbxSelectAtId->setEnabled( false );
   cbxCheckPrimaryKeyUnicity->setEnabled( false );
   pbnDcUnlock->setEnabled( true );
-  pbnDcCancel->setEnabled( false );
-  pbnDcApply->setEnabled( false );
+  pbnDcReset->setEnabled( false );
+  pbnDcUpdate->setEnabled( false );
 }
 
-void QgsVectorLayerProperties::pbnDcApply_clicked()
+void QgsVectorLayerProperties::pbnDcUpdate_clicked()
 {
   // Clone QgsDataSourceUri
   QgsDataSourceUri uri( mLayer->dataProvider()->uri().uri( false ) );
@@ -1969,7 +1969,7 @@ void QgsVectorLayerProperties::pbnDcApply_clicked()
 
   mLayer->dataProvider()->setUri( uri );
 
-  pbnDcCancel_clicked();
+  pbnDcReset_clicked();
 }
 
 void QgsVectorLayerProperties::optionsStackedWidget_CurrentChanged( int index )
