@@ -164,7 +164,7 @@ class TestQgsServerWMSDimension(TestQgsServerWMSTestBase):
             "HEIGHT": "500",
             "WIDTH": "500",
             "CRS": "EPSG:3857",
-            "DIM_DATE_FR": "31/05/2021"
+            "DIM_DATE_FR": "31%26%2347;05%26%2347;2021"
         }.items())])
 
         r, h = self._result(self._execute_request(qs))

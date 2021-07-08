@@ -144,7 +144,7 @@ Content-Type: text/xml; charset=utf-8
     </Style>
     <Dimension nearestValue="0" multipleValues="1" name="time" units="ISO8601">2021-05-31T10:00:00, 2021-05-31T17:00:00, 2021-06-30T07:00:00, 2021-07-30T01:00:00, 2021-07-30T05:00:00, 2021-08-29T19:00:00, 2021-09-28T09:00:00, 2021-09-28T21:00:00, 2021-10-28T10:00:00, 2021-12-27T22:00:00</Dimension>
     <Dimension nearestValue="0" multipleValues="1" name="date" units="ISO8601">2021-05-31, 2021-06-30, 2021-07-30, 2021-08-29, 2021-09-28, 2021-10-28, 2021-12-27</Dimension>
-    <Dimension nearestValue="0" multipleValues="1" name="date_fr">27/12/2021, 28/09/2021, 28/10/2021, 29/08/2021, 30/06/2021, 30/07/2021, 31/05/2021</Dimension>
+    <Dimension nearestValue="0" multipleValues="1" name="date_fr">27&amp;#47;12&amp;#47;2021, 28&amp;#47;09&amp;#47;2021, 28&amp;#47;10&amp;#47;2021, 29&amp;#47;08&amp;#47;2021, 30&amp;#47;06&amp;#47;2021, 30&amp;#47;07&amp;#47;2021, 31&amp;#47;05&amp;#47;2021</Dimension>
    </Layer>
    <Layer queryable="1">
     <Name>Contours</Name>
