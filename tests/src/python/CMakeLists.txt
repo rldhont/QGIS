@@ -357,6 +357,7 @@ ADD_PYTHON_TEST(PyQgsPluginDependencies test_plugindependencies.py)
 ADD_PYTHON_TEST(PyQgsDBManagerSQLWindow test_db_manager_sql_window.py)
 ADD_PYTHON_TEST(PyQgsSelectiveMasking test_selective_masking.py)
 ADD_PYTHON_TEST(PyQgsRelationEditorWidgetRegistry test_qgsrelationeditorwidgetregistry.py)
+ADD_PYTHON_TEST(PyQgsVectorTile test_qgsvectortile.py)
 
 if (NOT WIN32)
   ADD_PYTHON_TEST(PyQgsLogger test_qgslogger.py)
