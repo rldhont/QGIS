@@ -21,6 +21,7 @@
 
 #include <QRegExp>
 #include <QTemporaryDir>
+#include <QSettings>
 
 #include <iostream>
 #include <limits>
@@ -50,6 +51,10 @@ int main( int argc, char **argv )
     if ( arg == QLatin1String( "--verbose" ) )
       verbose = true;
   }
+
+  QTemporaryDir stemp;
+  QSettings::setDefaultFormat( QSettings::IniFormat );
+  QSettings::setPath( QSettings::IniFormat, QSettings::UserScope, stemp.path() );
 
   QTemporaryDir temp;
   QgsApplication::init( temp.path() );

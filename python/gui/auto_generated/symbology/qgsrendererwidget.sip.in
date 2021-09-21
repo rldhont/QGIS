@@ -72,6 +72,7 @@ This method should be called whenever the renderer is actually set on the layer.
     virtual void setDockMode( bool dockMode );
 
 
+
   signals:
 
     void layerVariablesChanged();
@@ -81,9 +82,12 @@ vector layers have been changed. Will request the parent dialog
 to re-synchronize with the variables.
 %End
 
-    void symbolLevelsChanged();
+ void symbolLevelsChanged() /Deprecated/;
 %Docstring
 Emitted when the symbol levels settings have been changed.
+
+.. deprecated:: QGIS 3.16.9
+   -- no longer emitted.
 %End
 
   protected:
@@ -104,6 +108,17 @@ Creates widget to setup data-defined size legend.
 Returns newly created panel - may be ``None`` if it could not be opened. Ownership is transferred to the caller.
 
 .. versionadded:: 3.0
+%End
+
+    virtual void setSymbolLevels( const QList< QgsLegendSymbolItem > &levels, bool enabled );
+%Docstring
+Sets the symbol levels for the renderer defined in the widget.
+
+The ``levels`` argument defines the updated list of symbols with rendering passes set.
+
+The ``enabled`` arguments specifies if symbol levels should be enabled for the renderer.
+
+.. versionadded:: 3.16.9
 %End
 
   protected slots:

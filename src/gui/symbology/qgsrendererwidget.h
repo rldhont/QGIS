@@ -29,6 +29,7 @@ class QgsVectorLayer;
 class QgsStyle;
 class QgsFeatureRenderer;
 class QgsMapCanvas;
+class QgsLegendSymbolItem;
 
 /**
  * \ingroup gui
@@ -81,6 +82,14 @@ class GUI_EXPORT QgsRendererWidget : public QgsPanelWidget
 
     void setDockMode( bool dockMode ) override;
 
+    /**
+     * Disables symbol level modification on the widget.
+     *
+     * \note Not available in Python bindings
+     * \since QGIS 3.20
+     */
+    virtual void disableSymbolLevels() SIP_SKIP;
+
   signals:
 
     /**
@@ -92,8 +101,10 @@ class GUI_EXPORT QgsRendererWidget : public QgsPanelWidget
 
     /**
      * Emitted when the symbol levels settings have been changed.
+     *
+     * \deprecated since QGIS 3.16.9 -- no longer emitted.
      */
-    void symbolLevelsChanged();
+    Q_DECL_DEPRECATED void symbolLevelsChanged() SIP_DEPRECATED;
 
   protected:
     QgsVectorLayer *mLayer = nullptr;
@@ -130,6 +141,17 @@ class GUI_EXPORT QgsRendererWidget : public QgsPanelWidget
      * \since QGIS 3.0
      */
     QgsDataDefinedSizeLegendWidget *createDataDefinedSizeLegendWidget( const QgsMarkerSymbol *symbol, const QgsDataDefinedSizeLegend *ddsLegend ) SIP_FACTORY;
+
+    /**
+     * Sets the symbol levels for the renderer defined in the widget.
+     *
+     * The \a levels argument defines the updated list of symbols with rendering passes set.
+     *
+     * The \a enabled arguments specifies if symbol levels should be enabled for the renderer.
+     *
+     * \since QGIS 3.16.9
+     */
+    virtual void setSymbolLevels( const QList< QgsLegendSymbolItem > &levels, bool enabled );
 
   protected slots:
     void  contextMenuViewCategories( QPoint p );

@@ -681,7 +681,13 @@ static QVariant fcnAggregate( const QVariantList &values, const QgsExpressionCon
     subContext.appendScope( subScope );
     result = vl->aggregate( aggregate, subExpression, parameters, &subContext, &ok );
 
-    context->setCachedValue( cacheKey, result );
+    if ( ok )
+    {
+      // important -- we should only store cached values when the expression is successfully calculated. Otherwise subsequent
+      // use of the expression context will happily grab the invalid QVariant cached value without realising that there was actually an error
+      // associated with it's calculation!
+      context->setCachedValue( cacheKey, result );
+    }
   }
   else
   {
@@ -6238,7 +6244,7 @@ const QList<QgsExpressionFunction *> &QgsExpression::Functions()
         << new QgsStaticExpressionFunction( QStringLiteral( "regexp_replace" ), QgsExpressionFunction::ParameterList() << QgsExpressionFunction::Parameter( QStringLiteral( "input_string" ) ) << QgsExpressionFunction::Parameter( QStringLiteral( "regex" ) )
                                             << QgsExpressionFunction::Parameter( QStringLiteral( "replacement" ) ), fcnRegexpReplace, QStringLiteral( "String" ) )
         << new QgsStaticExpressionFunction( QStringLiteral( "regexp_substr" ), QgsExpressionFunction::ParameterList() << QgsExpressionFunction::Parameter( QStringLiteral( "input_string" ) ) << QgsExpressionFunction::Parameter( QStringLiteral( "regex" ) ), fcnRegexpSubstr, QStringLiteral( "String" ) )
-        << new QgsStaticExpressionFunction( QStringLiteral( "substr" ), QgsExpressionFunction::ParameterList() << QgsExpressionFunction::Parameter( QStringLiteral( "string" ) ) << QgsExpressionFunction::Parameter( QStringLiteral( "start " ) ) << QgsExpressionFunction::Parameter( QStringLiteral( "length" ), true ), fcnSubstr, QStringLiteral( "String" ), QString(),
+        << new QgsStaticExpressionFunction( QStringLiteral( "substr" ), QgsExpressionFunction::ParameterList() << QgsExpressionFunction::Parameter( QStringLiteral( "string" ) ) << QgsExpressionFunction::Parameter( QStringLiteral( "start" ) ) << QgsExpressionFunction::Parameter( QStringLiteral( "length" ), true ), fcnSubstr, QStringLiteral( "String" ), QString(),
                                             false, QSet< QString >(), false, QStringList(), true )
         << new QgsStaticExpressionFunction( QStringLiteral( "concat" ), -1, fcnConcat, QStringLiteral( "String" ), QString(), false, QSet<QString>(), false, QStringList(), true )
         << new QgsStaticExpressionFunction( QStringLiteral( "strpos" ), QgsExpressionFunction::ParameterList() << QgsExpressionFunction::Parameter( QStringLiteral( "haystack" ) ) << QgsExpressionFunction::Parameter( QStringLiteral( "needle" ) ), fcnStrpos, QStringLiteral( "String" ) )

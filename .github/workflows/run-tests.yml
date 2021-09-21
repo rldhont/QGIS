@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - release-**
+      - queued_ltr_backports
     paths:
     - 'src/**'
     - 'external/**'
@@ -18,6 +19,7 @@ on:
     branches:
       - master
       - release-**
+      - queued_ltr_backports
     paths:
     - 'src/**'
     - 'external/**'
@@ -40,8 +42,8 @@ jobs:
 
     strategy:
       matrix:
-        # tests run on 20.04 (Qt 5.12), compile test on 20.10 (Qt 5.14)
-        ubuntu-base: ['20.04', '20.10']
+        # tests run on 20.04 (Qt 5.12)
+        ubuntu-base: ['20.04']
       fail-fast: false
 
     outputs:
@@ -80,11 +82,11 @@ jobs:
         run: |
           pushd .docker
           docker pull qgis/qgis3-build-deps:${DOCKER_TAG} || true
-          docker build --build-arg UBUNTU_BASE=${UBUNTU_BASE} --cache-from qgis/qgis3-build-deps:${DOCKER_TAG} -t qgis/qgis3-build-deps:${DOCKER_TAG} -f qgis3-build-deps.dockerfile .
+          docker build --build-arg UBUNTU_BASE=${UBUNTU_BASE} --cache-from qgis/qgis3-build-deps:${DOCKER_TAG} -t qgis/qgis3-build-deps:${DOCKER_TAG} -f qgis3-qt5-build-deps.dockerfile .
           popd
 
       - name: Push deps image
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.repository_owner == 'qgis' && github.event_name != 'pull_request' }}
         run: |
           docker login -u="${DOCKER_USERNAME}" -p="${DOCKER_PASSWORD}"
           docker push "qgis/qgis3-build-deps:${DOCKER_TAG}"

@@ -34,6 +34,9 @@ QgsLayoutAtlas::QgsLayoutAtlas( QgsLayout *layout )
 
   //listen out for layer removal
   connect( mLayout->project(), static_cast < void ( QgsProject::* )( const QStringList & ) >( &QgsProject::layersWillBeRemoved ), this, &QgsLayoutAtlas::removeLayers );
+
+  if ( mLayout->customProperty( QStringLiteral( "singleFile" ) ).isNull() )
+    mLayout->setCustomProperty( QStringLiteral( "singleFile" ), true );
 }
 
 QString QgsLayoutAtlas::stringType() const
@@ -287,6 +290,13 @@ int QgsLayoutAtlas::updateFeatures()
     //filter good to go
     req.setFilterExpression( mFilterExpression );
   }
+
+#ifdef HAVE_SERVER_PYTHON_PLUGINS
+  if ( mLayout->renderContext().featureFilterProvider() )
+  {
+    mLayout->renderContext().featureFilterProvider()->filterFeatures( mCoverageLayer.get(), req );
+  }
+#endif
 
   QgsFeatureIterator fit = mCoverageLayer->getFeatures( req );
 

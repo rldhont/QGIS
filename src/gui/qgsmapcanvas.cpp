@@ -514,12 +514,28 @@ QgsMapLayer *QgsMapCanvas::currentLayer()
   return mCurrentLayer;
 }
 
-QgsExpressionContextScope *QgsMapCanvas::defaultExpressionContextScope()
+QgsExpressionContextScope *QgsMapCanvas::defaultExpressionContextScope() const
 {
   QgsExpressionContextScope *s = new QgsExpressionContextScope( QObject::tr( "Map Canvas" ) );
   s->setVariable( QStringLiteral( "canvas_cursor_point" ), QgsGeometry::fromPointXY( cursorPoint() ), true );
-
   return s;
+}
+
+QgsExpressionContext QgsMapCanvas::createExpressionContext() const
+{
+  //build the expression context
+  QgsExpressionContext expressionContext;
+  expressionContext << QgsExpressionContextUtils::globalScope()
+                    << QgsExpressionContextUtils::projectScope( QgsProject::instance() )
+                    << QgsExpressionContextUtils::atlasScope( nullptr )
+                    << QgsExpressionContextUtils::mapSettingsScope( mSettings );
+  if ( QgsExpressionContextScopeGenerator *generator = dynamic_cast< QgsExpressionContextScopeGenerator * >( mController ) )
+  {
+    expressionContext << generator->createExpressionContextScope();
+  }
+  expressionContext << defaultExpressionContextScope()
+                    << new QgsExpressionContextScope( mExpressionContextScope );
+  return expressionContext;
 }
 
 void QgsMapCanvas::refresh()
@@ -559,20 +575,7 @@ void QgsMapCanvas::refreshMap()
   stopRendering(); // if any...
   stopPreviewJobs();
 
-  //build the expression context
-  QgsExpressionContext expressionContext;
-  expressionContext << QgsExpressionContextUtils::globalScope()
-                    << QgsExpressionContextUtils::projectScope( QgsProject::instance() )
-                    << QgsExpressionContextUtils::atlasScope( nullptr )
-                    << QgsExpressionContextUtils::mapSettingsScope( mSettings );
-  if ( QgsExpressionContextScopeGenerator *generator = dynamic_cast< QgsExpressionContextScopeGenerator * >( mController ) )
-  {
-    expressionContext << generator->createExpressionContextScope();
-  }
-  expressionContext << defaultExpressionContextScope()
-                    << new QgsExpressionContextScope( mExpressionContextScope );
-
-  mSettings.setExpressionContext( expressionContext );
+  mSettings.setExpressionContext( createExpressionContext() );
   mSettings.setPathResolver( QgsProject::instance()->pathResolver() );
 
   if ( !mTheme.isEmpty() )
@@ -1704,14 +1707,14 @@ void QgsMapCanvas::endZoomRect( QPoint pos )
   mZoomRect.setRight( pos.x() );
   mZoomRect.setBottom( pos.y() );
 
+  //account for bottom right -> top left dragging
+  mZoomRect = mZoomRect.normalized();
+
   if ( mZoomRect.width() < 5 && mZoomRect.height() < 5 )
   {
     //probably a mistake - would result in huge zoom!
     return;
   }
-
-  //account for bottom right -> top left dragging
-  mZoomRect = mZoomRect.normalized();
 
   // set center and zoom
   const QSize &zoomRectSize = mZoomRect.size();

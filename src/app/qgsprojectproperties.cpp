@@ -804,7 +804,10 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas *mapCanvas, QWidget *pa
     currentLayer = it.value();
     if ( currentLayer->type() == QgsMapLayerType::VectorLayer )
     {
-
+      QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( currentLayer );
+      QgsVectorDataProvider *provider = vlayer->dataProvider();
+      if ( !provider )
+        continue;
       QTableWidgetItem *twi = new QTableWidgetItem( QString::number( j ) );
       twWFSLayers->setVerticalHeaderItem( j, twi );
 
@@ -822,8 +825,6 @@ QgsProjectProperties::QgsProjectProperties( QgsMapCanvas *mapCanvas, QWidget *pa
       psb->setValue( QgsProject::instance()->readNumEntry( QStringLiteral( "WFSLayersPrecision" ), "/" + currentLayer->id(), 8 ) );
       twWFSLayers->setCellWidget( j, 2, psb );
 
-      QgsVectorLayer *vlayer = qobject_cast<QgsVectorLayer *>( currentLayer );
-      QgsVectorDataProvider *provider = vlayer->dataProvider();
       if ( ( provider->capabilities() & QgsVectorDataProvider::ChangeAttributeValues ) && ( provider->capabilities() & QgsVectorDataProvider::ChangeGeometries ) )
       {
         QCheckBox *cbu = new QCheckBox();
@@ -1555,7 +1556,7 @@ void QgsProjectProperties::apply()
   //refresh canvases to reflect new properties, eg background color and scale bar after changing display units.
   for ( QgsMapCanvas *canvas : constMapCanvases )
   {
-    canvas->refresh();
+    canvas->redrawAllLayers();
   }
 }
 

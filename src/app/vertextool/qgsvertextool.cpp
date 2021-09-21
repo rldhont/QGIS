@@ -564,6 +564,7 @@ void QgsVertexTool::cadCanvasReleaseEvent( QgsMapMouseEvent *e )
       }
 
       QgsRenderContext context = QgsRenderContext::fromMapSettings( mCanvas->mapSettings() );
+      context.setExpressionContext( mCanvas->createExpressionContext() );
       context.expressionContext() << QgsExpressionContextUtils::layerScope( vlayer );
       std::unique_ptr< QgsFeatureRenderer > r;
       if ( vlayer->renderer() )
@@ -583,6 +584,7 @@ void QgsVertexTool::cadCanvasReleaseEvent( QgsMapMouseEvent *e )
         request.setSubsetOfAttributes( r->usedAttributes( context ), vlayer->fields() );
       else
         request.setNoAttributes();
+      request.setExpressionContext( context.expressionContext() );
 
       QgsFeature f;
       QgsFeatureIterator fi = vlayer->getFeatures( request );

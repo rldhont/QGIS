@@ -578,7 +578,7 @@ QgsCategorizedSymbolRendererWidget::QgsCategorizedSymbolRendererWidget( QgsVecto
 
   advMenu->addAction( tr( "Match to Saved Symbols" ), this, SLOT( matchToSymbolsFromLibrary() ) );
   advMenu->addAction( tr( "Match to Symbols from File…" ), this, SLOT( matchToSymbolsFromXml() ) );
-  advMenu->addAction( tr( "Symbol Levels…" ), this, SLOT( showSymbolLevels() ) );
+  mActionLevels = advMenu->addAction( tr( "Symbol Levels…" ), this, SLOT( showSymbolLevels() ) );
   if ( mCategorizedSymbol && mCategorizedSymbol->type() == QgsSymbol::Marker )
   {
     QAction *actionDdsLegend = advMenu->addAction( tr( "Data-defined Size Legend…" ) );
@@ -643,6 +643,12 @@ void QgsCategorizedSymbolRendererWidget::setContext( const QgsSymbolWidgetContex
   QgsRendererWidget::setContext( context );
   btnChangeCategorizedSymbol->setMapCanvas( context.mapCanvas() );
   btnChangeCategorizedSymbol->setMessageBar( context.messageBar() );
+}
+
+void QgsCategorizedSymbolRendererWidget::disableSymbolLevels()
+{
+  delete mActionLevels;
+  mActionLevels = nullptr;
 }
 
 void QgsCategorizedSymbolRendererWidget::changeSelectedSymbols()
@@ -1093,6 +1099,21 @@ void QgsCategorizedSymbolRendererWidget::matchToSymbolsFromXml()
     QMessageBox::warning( this, tr( "Match to Symbols from File" ),
                           tr( "No categories could be matched to symbols in file." ) );
   }
+}
+
+void QgsCategorizedSymbolRendererWidget::setSymbolLevels( const QgsLegendSymbolList &levels, bool enabled )
+{
+  for ( const QgsLegendSymbolItem &legendSymbol : levels )
+  {
+    QgsSymbol *sym = legendSymbol.symbol();
+    for ( int layer = 0; layer < sym->symbolLayerCount(); layer++ )
+    {
+      mRenderer->setLegendSymbolItem( legendSymbol.ruleKey(), sym->clone() );
+    }
+  }
+  mRenderer->setUsingSymbolLevels( enabled );
+  mModel->updateSymbology();
+  emit widgetChanged();
 }
 
 void QgsCategorizedSymbolRendererWidget::pasteSymbolToSelection()

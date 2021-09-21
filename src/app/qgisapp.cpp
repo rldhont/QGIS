@@ -6099,7 +6099,11 @@ QList<QgsMapLayer *> QgisApp::askUserForOGRSublayers( QgsVectorLayer *&parentLay
   chooseSublayersDialog.populateLayerTable( list );
 
   if ( !chooseSublayersDialog.exec() )
+  {
+    delete parentLayer;
+    parentLayer = nullptr;
     return result;
+  }
 
   const bool addToGroup = chooseSublayersDialog.addToGroupCheckbox();
 
@@ -8605,7 +8609,7 @@ void QgisApp::fieldCalculator()
 void QgisApp::attributeTable( QgsAttributeTableFilterModel::FilterMode filter )
 {
   QgsVectorLayer *myLayer = qobject_cast<QgsVectorLayer *>( activeLayer() );
-  if ( !myLayer )
+  if ( !myLayer || !myLayer->dataProvider() )
   {
     return;
   }
@@ -8877,7 +8881,7 @@ void QgisApp::saveStyleFile( QgsMapLayer *layer )
     layer = activeLayer();
   }
 
-  if ( !layer )
+  if ( !layer || !layer->dataProvider() )
     return;
 
   switch ( layer->type() )
@@ -10376,7 +10380,7 @@ void QgisApp::pasteFromClipboard( QgsMapLayer *destinationLayer )
   int nTotalFeatures = features.count();
   QgsExpressionContext context = pasteVectorLayer->createExpressionContext();
 
-  QgsFeatureList compatibleFeatures( QgsVectorLayerUtils::makeFeaturesCompatible( features, pasteVectorLayer ) );
+  QgsFeatureList compatibleFeatures( QgsVectorLayerUtils::makeFeaturesCompatible( features, pasteVectorLayer, QgsFeatureSink::RegeneratePrimaryKey ) );
   QgsVectorLayerUtils::QgsFeaturesDataList newFeaturesDataList;
   newFeaturesDataList.reserve( compatibleFeatures.size() );
 
@@ -15938,6 +15942,8 @@ void QgisApp::showLayerProperties( QgsMapLayer *mapLayer, const QString &page )
       QgsRasterLayerProperties *rasterLayerPropertiesDialog = new QgsRasterLayerProperties( mapLayer, mMapCanvas, this );
       if ( !page.isEmpty() )
         rasterLayerPropertiesDialog->setCurrentPage( page );
+      else
+        rasterLayerPropertiesDialog->restoreLastPage();
 
       // Cannot use exec here due to raster transparency map tool:
       // in order to pass focus to the canvas, the dialog needs to
@@ -15965,6 +15971,11 @@ void QgisApp::showLayerProperties( QgsMapLayer *mapLayer, const QString &page )
       {
         meshLayerPropertiesDialog.addPropertiesPageFactory( factory );
       }
+
+      if ( !page.isEmpty() )
+        meshLayerPropertiesDialog.setCurrentPage( page );
+      else
+        meshLayerPropertiesDialog.restoreLastPage();
 
       mMapStyleWidget->blockUpdates( true );
       if ( meshLayerPropertiesDialog.exec() )
@@ -16022,6 +16033,8 @@ void QgisApp::showLayerProperties( QgsMapLayer *mapLayer, const QString &page )
       QgsVectorTileLayerProperties vectorTileLayerPropertiesDialog( qobject_cast<QgsVectorTileLayer *>( mapLayer ), mMapCanvas, visibleMessageBar(), this );
       if ( !page.isEmpty() )
         vectorTileLayerPropertiesDialog.setCurrentPage( page );
+      else
+        vectorTileLayerPropertiesDialog.restoreLastPage();
 
       mMapStyleWidget->blockUpdates( true );
       if ( vectorTileLayerPropertiesDialog.exec() )

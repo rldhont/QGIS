@@ -463,7 +463,7 @@ QgsGraduatedSymbolRendererWidget::QgsGraduatedSymbolRendererWidget( QgsVectorLay
   // setup user interface
   setupUi( this );
 
-  mSymmetryPointValidator = new QDoubleValidator();
+  mSymmetryPointValidator = new QDoubleValidator( this );
   cboSymmetryPoint->setEditable( true );
   cboSymmetryPoint->setValidator( mSymmetryPointValidator );
 
@@ -575,7 +575,7 @@ QgsGraduatedSymbolRendererWidget::QgsGraduatedSymbolRendererWidget( QgsVectorLay
   // menus for data-defined rotation/size
   QMenu *advMenu = new QMenu( this );
 
-  advMenu->addAction( tr( "Symbol Levels…" ), this, SLOT( showSymbolLevels() ) );
+  mActionLevels = advMenu->addAction( tr( "Symbol Levels…" ), this, SLOT( showSymbolLevels() ) );
   if ( mGraduatedSymbol && mGraduatedSymbol->type() == QgsSymbol::Marker )
   {
     QAction *actionDdsLegend = advMenu->addAction( tr( "Data-defined Size Legend…" ) );
@@ -619,6 +619,12 @@ void QgsGraduatedSymbolRendererWidget::setContext( const QgsSymbolWidgetContext 
   QgsRendererWidget::setContext( context );
   btnChangeGraduatedSymbol->setMapCanvas( context.mapCanvas() );
   btnChangeGraduatedSymbol->setMessageBar( context.messageBar() );
+}
+
+void QgsGraduatedSymbolRendererWidget::disableSymbolLevels()
+{
+  delete mActionLevels;
+  mActionLevels = nullptr;
 }
 
 // Connect/disconnect event handlers which trigger updating renderer
@@ -907,6 +913,21 @@ void QgsGraduatedSymbolRendererWidget::refreshRanges( bool )
   spinGraduatedClasses->setValue( mRenderer->ranges().count() );
   connectUpdateHandlers();
 
+  emit widgetChanged();
+}
+
+void QgsGraduatedSymbolRendererWidget::setSymbolLevels( const QgsLegendSymbolList &levels, bool enabled )
+{
+  for ( const QgsLegendSymbolItem &legendSymbol : levels )
+  {
+    QgsSymbol *sym = legendSymbol.symbol();
+    for ( int layer = 0; layer < sym->symbolLayerCount(); layer++ )
+    {
+      mRenderer->setLegendSymbolItem( legendSymbol.ruleKey(), sym->clone() );
+    }
+  }
+  mRenderer->setUsingSymbolLevels( enabled );
+  mModel->updateSymbology();
   emit widgetChanged();
 }
 

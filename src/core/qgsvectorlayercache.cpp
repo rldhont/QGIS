@@ -173,7 +173,20 @@ bool QgsVectorLayerCache::featureAtId( QgsFeatureId featureId, QgsFeature &featu
 
 bool QgsVectorLayerCache::removeCachedFeature( QgsFeatureId fid )
 {
-  return mCache.remove( fid );
+  bool removed = mCache.remove( fid );
+  if ( removed )
+  {
+    auto unorderedIt = std::find( mCacheUnorderedKeys.begin(), mCacheUnorderedKeys.end(), fid );
+    if ( unorderedIt != mCacheUnorderedKeys.end() )
+    {
+      mCacheUnorderedKeys.erase( unorderedIt );
+
+      auto orderedIt = std::find( mCacheOrderedKeys.begin(), mCacheOrderedKeys.end(), fid );
+      if ( orderedIt != mCacheOrderedKeys.end() )
+        mCacheOrderedKeys.erase( orderedIt );
+    }
+  }
+  return removed;
 }
 
 QgsVectorLayer *QgsVectorLayerCache::layer()
@@ -265,6 +278,15 @@ void QgsVectorLayerCache::onJoinAttributeValueChanged( QgsFeatureId fid, int fie
 void QgsVectorLayerCache::featureDeleted( QgsFeatureId fid )
 {
   mCache.remove( fid );
+
+  auto it = mCacheUnorderedKeys.find( fid );
+  if ( it != mCacheUnorderedKeys.end() )
+  {
+    mCacheUnorderedKeys.erase( it );
+    auto orderedIt = std::find( mCacheOrderedKeys.begin(), mCacheOrderedKeys.end(), fid );
+    if ( orderedIt != mCacheOrderedKeys.end() )
+      mCacheOrderedKeys.erase( orderedIt );
+  }
 }
 
 void QgsVectorLayerCache::onFeatureAdded( QgsFeatureId fid )
@@ -323,6 +345,8 @@ void QgsVectorLayerCache::layerDeleted()
 void QgsVectorLayerCache::invalidate()
 {
   mCache.clear();
+  mCacheOrderedKeys.clear();
+  mCacheUnorderedKeys.clear();
   mFullCache = false;
   emit invalidated();
 }

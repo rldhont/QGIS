@@ -245,7 +245,11 @@ QgsFeatureIds QgsMapToolSelectUtils::getMatchingFeatures( QgsMapCanvas *canvas, 
   selectionGeometryEngine->prepareGeometry();
 
   QgsRenderContext context = QgsRenderContext::fromMapSettings( canvas->mapSettings() );
-  context.expressionContext() << QgsExpressionContextUtils::layerScope( vlayer );
+
+  QgsExpressionContext expressionContext = canvas->createExpressionContext();
+  expressionContext << QgsExpressionContextUtils::layerScope( vlayer );
+  context.setExpressionContext( expressionContext );
+
   std::unique_ptr< QgsFeatureRenderer > r;
   if ( vlayer->renderer() )
   {
@@ -283,6 +287,7 @@ QgsFeatureIds QgsMapToolSelectUtils::getMatchingFeatures( QgsMapCanvas *canvas, 
     }
   }
 
+  request.setExpressionContext( context.expressionContext() );
   QgsFeatureIterator fit = vlayer->getFeatures( request );
 
   QgsFeature f;

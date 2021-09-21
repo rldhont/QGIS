@@ -511,7 +511,7 @@ QMap<QString, QString> QgsMapToolIdentify::derivedAttributesForPoint( const QgsP
 
 bool QgsMapToolIdentify::identifyVectorLayer( QList<QgsMapToolIdentify::IdentifyResult> *results, QgsVectorLayer *layer, const QgsGeometry &geometry, const QgsIdentifyContext &identifyContext )
 {
-  if ( !layer || !layer->isSpatial() )
+  if ( !layer || !layer->isSpatial() || !layer->dataProvider() )
     return false;
 
   if ( !layer->isInScaleRange( mCanvas->mapSettings().scale() ) )
@@ -607,6 +607,7 @@ bool QgsMapToolIdentify::identifyVectorLayer( QList<QgsMapToolIdentify::Identify
   bool filter = false;
 
   QgsRenderContext context( QgsRenderContext::fromMapSettings( mCanvas->mapSettings() ) );
+  context.setExpressionContext( mCanvas->createExpressionContext() );
   context.expressionContext() << QgsExpressionContextUtils::layerScope( layer );
   std::unique_ptr< QgsFeatureRenderer > renderer( layer->renderer() ? layer->renderer()->clone() : nullptr );
   if ( renderer )

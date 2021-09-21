@@ -1334,6 +1334,10 @@ void QgsLayoutItemMap::drawMap( QPainter *painter, const QgsRectangle &extent, Q
   }
 
   QgsMapRendererCustomPainterJob job( ms, painter );
+#ifdef HAVE_SERVER_PYTHON_PLUGINS
+  job.setFeatureFilterProvider( mLayout->renderContext().featureFilterProvider() );
+#endif
+
   // Render the map in this thread. This is done because of problems
   // with printing to printer on Windows (printing to PDF is fine though).
   // Raster images were not displayed - see #10599
@@ -2606,7 +2610,7 @@ void QgsLayoutItemMap::updateAtlasFeature()
     else
       scales = mLayout->renderContext().predefinedScales();
     Q_NOWARN_DEPRECATED_POP
-    if ( mAtlasScalingMode == Fixed || isPointLayer || scales.isEmpty() )
+    if ( mAtlasScalingMode == Fixed || scales.isEmpty() || ( isPointLayer && mAtlasScalingMode != Predefined ) )
     {
       // only translate, keep the original scale (i.e. width x height)
       double xMin = geomCenterX - originalExtent.width() / 2.0;

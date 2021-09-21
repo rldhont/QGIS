@@ -64,7 +64,7 @@ QgsSourceFieldsProperties::QgsSourceFieldsProperties( QgsVectorLayer *layer, QWi
   mFieldsList->setHorizontalHeaderItem( AttrLengthCol, new QTableWidgetItem( tr( "Length" ) ) );
   mFieldsList->setHorizontalHeaderItem( AttrPrecCol, new QTableWidgetItem( tr( "Precision" ) ) );
   mFieldsList->setHorizontalHeaderItem( AttrCommentCol, new QTableWidgetItem( tr( "Comment" ) ) );
-  const auto configurationFlagsWi = new QTableWidgetItem( QStringLiteral( "Configuration" ) );
+  const auto configurationFlagsWi = new QTableWidgetItem( tr( "Configuration" ) );
   configurationFlagsWi->setToolTip( tr( "Configures the field" ) );
   mFieldsList->setHorizontalHeaderItem( AttrConfigurationFlagsCol, configurationFlagsWi );
   mFieldsList->setHorizontalHeaderItem( AttrAliasCol, new QTableWidgetItem( tr( "Alias" ) ) );
@@ -321,6 +321,11 @@ void QgsSourceFieldsProperties::editingToggled()
 
 void QgsSourceFieldsProperties::addAttributeClicked()
 {
+  if ( !mLayer || !mLayer->dataProvider() )
+  {
+    return;
+  }
+
   QgsAddAttrDialog dialog( mLayer, this );
   if ( dialog.exec() == QDialog::Accepted )
   {
@@ -364,7 +369,7 @@ void QgsSourceFieldsProperties::deleteAttributeClicked()
 
 void QgsSourceFieldsProperties::calculateFieldClicked()
 {
-  if ( !mLayer )
+  if ( !mLayer || !mLayer->dataProvider() )
   {
     return;
   }

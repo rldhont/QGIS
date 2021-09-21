@@ -31,7 +31,9 @@
 QgsVectorLayerFeatureSource::QgsVectorLayerFeatureSource( const QgsVectorLayer *layer )
 {
   QMutexLocker locker( &layer->mFeatureSourceConstructorMutex );
-  mProviderFeatureSource.reset( layer->dataProvider()->featureSource() );
+  const QgsVectorDataProvider *provider = layer->dataProvider();
+  if ( provider )
+    mProviderFeatureSource.reset( provider->featureSource() );
   mFields = layer->fields();
   mId = layer->id();
 
@@ -286,13 +288,16 @@ QgsVectorLayerFeatureIterator::QgsVectorLayerFeatureIterator( QgsVectorLayerFeat
   }
   else // no filter or filter by rect
   {
-    if ( mSource->mHasEditBuffer )
+    if ( mSource->mProviderFeatureSource )
     {
-      mChangedFeaturesIterator = mSource->mProviderFeatureSource->getFeatures( mChangedFeaturesRequest );
-    }
-    else
-    {
-      mProviderIterator = mSource->mProviderFeatureSource->getFeatures( mProviderRequest );
+      if ( mSource->mHasEditBuffer )
+      {
+        mChangedFeaturesIterator = mSource->mProviderFeatureSource->getFeatures( mChangedFeaturesRequest );
+      }
+      else
+      {
+        mProviderIterator = mSource->mProviderFeatureSource->getFeatures( mProviderRequest );
+      }
     }
 
     rewindEditBuffer();
@@ -430,8 +435,11 @@ bool QgsVectorLayerFeatureIterator::fetchFeature( QgsFeature &f )
   if ( mProviderIterator.isClosed() )
   {
     mChangedFeaturesIterator.close();
-    mProviderIterator = mSource->mProviderFeatureSource->getFeatures( mProviderRequest );
-    mProviderIterator.setInterruptionChecker( mInterruptionChecker );
+    if ( mSource->mProviderFeatureSource )
+    {
+      mProviderIterator = mSource->mProviderFeatureSource->getFeatures( mProviderRequest );
+      mProviderIterator.setInterruptionChecker( mInterruptionChecker );
+    }
   }
 
   while ( mProviderIterator.nextFeature( f ) )
@@ -522,8 +530,9 @@ bool QgsVectorLayerFeatureIterator::isValid() const
 
 bool QgsVectorLayerFeatureIterator::fetchNextAddedFeature( QgsFeature &f )
 {
-  while ( mFetchAddedFeaturesIt-- != mSource->mAddedFeatures.constBegin() )
+  while ( mFetchAddedFeaturesIt != mSource->mAddedFeatures.constBegin() )
   {
+    --mFetchAddedFeaturesIt;
     QgsFeatureId fid = mFetchAddedFeaturesIt->id();
 
     if ( mFetchConsidered.contains( fid ) )
@@ -695,10 +704,11 @@ void QgsVectorLayerFeatureIterator::prepareJoin( int fieldIdx )
   {
     FetchJoinInfo info;
     info.joinInfo = joinInfo;
-    info.joinLayer = joinLayer;
+    info.joinSource = std::make_shared< QgsVectorLayerFeatureSource >( joinLayer );
     info.indexOffset = mSource->mJoinBuffer->joinedFieldsOffset( joinInfo, mSource->mFields );
     info.targetField = mSource->mFields.indexFromName( joinInfo->targetFieldName() );
     info.joinField = joinLayer->fields().indexFromName( joinInfo->joinFieldName() );
+    info.joinLayerFields = joinLayer->fields();
 
     // for joined fields, we always need to request the targetField from the provider too
     if ( !mPreparedFields.contains( info.targetField ) && !mFieldsToPrepare.contains( info.targetField ) )
@@ -1035,11 +1045,13 @@ void QgsVectorLayerFeatureIterator::FetchJoinInfo::addJoinedAttributesCached( Qg
 
 void QgsVectorLayerFeatureIterator::FetchJoinInfo::addJoinedAttributesDirect( QgsFeature &f, const QVariant &joinValue ) const
 {
+#if 0 // this is not thread safe -- we cannot access the layer here as this will be called from non-main threads.
   // Shortcut
   if ( joinLayer && ! joinLayer->hasFeatures() )
   {
     return;
   }
+#endif
 
   // no memory cache, query the joined values by setting substring
   QString subsetString;
@@ -1077,7 +1089,7 @@ void QgsVectorLayerFeatureIterator::FetchJoinInfo::addJoinedAttributesDirect( Qg
   if ( joinInfo->hasSubset() )
   {
     const QStringList subsetNames = QgsVectorLayerJoinInfo::joinFieldNamesSubset( *joinInfo );
-    subsetIndices = QgsVectorLayerJoinBuffer::joinSubsetIndices( joinLayer, subsetNames );
+    subsetIndices = QgsVectorLayerJoinBuffer::joinSubsetIndices( joinLayerFields, subsetNames );
   }
 
   // select (no geometry)
@@ -1086,7 +1098,7 @@ void QgsVectorLayerFeatureIterator::FetchJoinInfo::addJoinedAttributesDirect( Qg
   request.setSubsetOfAttributes( attributes );
   request.setFilterExpression( subsetString );
   request.setLimit( 1 );
-  QgsFeatureIterator fi = joinLayer->getFeatures( request );
+  QgsFeatureIterator fi = joinSource->getFeatures( request );
 
   // get first feature
   QgsFeature fet;

@@ -596,7 +596,7 @@ void QgsSimpleLineSymbolLayer::applyDataDefinedSymbology( QgsSymbolRenderContext
   {
     QVector<qreal> dashVector;
     QVariant exprVal = mDataDefinedProperties.value( QgsSymbolLayer::PropertyCustomDash, context.renderContext().expressionContext() );
-    if ( exprVal.isValid() )
+    if ( !exprVal.isNull() )
     {
       QStringList dashList = exprVal.toString().split( ';' );
       QStringList::const_iterator dashIt = dashList.constBegin();
@@ -634,7 +634,7 @@ void QgsSimpleLineSymbolLayer::applyDataDefinedSymbology( QgsSymbolRenderContext
   {
     context.setOriginalValueVariable( QgsSymbolLayerUtils::encodePenStyle( mPenStyle ) );
     QVariant exprVal = mDataDefinedProperties.value( QgsSymbolLayer::PropertyStrokeStyle, context.renderContext().expressionContext() );
-    if ( exprVal.isValid() )
+    if ( !exprVal.isNull() )
       pen.setStyle( QgsSymbolLayerUtils::decodePenStyle( exprVal.toString() ) );
   }
 
@@ -643,7 +643,7 @@ void QgsSimpleLineSymbolLayer::applyDataDefinedSymbology( QgsSymbolRenderContext
   {
     context.setOriginalValueVariable( QgsSymbolLayerUtils::encodePenJoinStyle( mPenJoinStyle ) );
     QVariant exprVal = mDataDefinedProperties.value( QgsSymbolLayer::PropertyJoinStyle, context.renderContext().expressionContext() );
-    if ( exprVal.isValid() )
+    if ( !exprVal.isNull() )
       pen.setJoinStyle( QgsSymbolLayerUtils::decodePenJoinStyle( exprVal.toString() ) );
   }
 
@@ -652,7 +652,7 @@ void QgsSimpleLineSymbolLayer::applyDataDefinedSymbology( QgsSymbolRenderContext
   {
     context.setOriginalValueVariable( QgsSymbolLayerUtils::encodePenCapStyle( mPenCapStyle ) );
     QVariant exprVal = mDataDefinedProperties.value( QgsSymbolLayer::PropertyCapStyle, context.renderContext().expressionContext() );
-    if ( exprVal.isValid() )
+    if ( !exprVal.isNull() )
       pen.setCapStyle( QgsSymbolLayerUtils::decodePenCapStyle( exprVal.toString() ) );
   }
 }
@@ -1132,7 +1132,7 @@ void QgsTemplatedLineSymbolLayerBase::renderPolyline( const QPolygonF &points, Q
   if ( mDataDefinedProperties.isActive( QgsSymbolLayer::PropertyPlacement ) )
   {
     QVariant exprVal = mDataDefinedProperties.value( QgsSymbolLayer::PropertyPlacement, context.renderContext().expressionContext() );
-    if ( exprVal.isValid() )
+    if ( !exprVal.isNull() )
     {
       QString placementString = exprVal.toString();
       if ( placementString.compare( QLatin1String( "interval" ), Qt::CaseInsensitive ) == 0 )
@@ -1620,7 +1620,6 @@ void QgsTemplatedLineSymbolLayerBase::renderPolylineVertex( const QPolygonF &poi
 
   QgsRenderContext &rc = context.renderContext();
 
-  double origAngle = symbolAngle();
   int i = -1, maxCount = 0;
   bool isRing = false;
 
@@ -1675,7 +1674,7 @@ void QgsTemplatedLineSymbolLayerBase::renderPolylineVertex( const QPolygonF &poi
         if ( rotateSymbols() )
         {
           double angle = context.renderContext().geometry()->vertexAngle( vId );
-          setSymbolAngle( angle * 180 / M_PI );
+          setSymbolLineAngle( angle * 180 / M_PI );
         }
         renderSymbol( mapPoint, context.feature(), rc, -1, context.selected() );
       }
@@ -1723,8 +1722,6 @@ void QgsTemplatedLineSymbolLayerBase::renderPolylineVertex( const QPolygonF &poi
     double distance;
     distance = placement == QgsTemplatedLineSymbolLayerBase::FirstVertex ? offsetAlongLine : -offsetAlongLine;
     renderOffsetVertexAlongLine( points, i, distance, context );
-    // restore original rotation
-    setSymbolAngle( origAngle );
 
     return;
   }
@@ -1753,7 +1750,7 @@ void QgsTemplatedLineSymbolLayerBase::renderPolylineVertex( const QPolygonF &poi
       {
         double angle = std::atan2( currentPoint.y() - prevPoint.y(),
                                    currentPoint.x() - prevPoint.x() );
-        setSymbolAngle( origAngle + angle * 180 / M_PI );
+        setSymbolLineAngle( angle * 180 / M_PI );
       }
       prevPoint = currentPoint;
     }
@@ -1764,15 +1761,12 @@ void QgsTemplatedLineSymbolLayerBase::renderPolylineVertex( const QPolygonF &poi
       if ( rotateSymbols() )
       {
         double angle = markerAngle( points, isRing, i );
-        setSymbolAngle( origAngle + angle * 180 / M_PI );
+        setSymbolLineAngle( angle * 180 / M_PI );
       }
     }
 
     renderSymbol( symbolPoint, context.feature(), rc, -1, context.selected() );
   }
-
-  // restore original rotation
-  setSymbolAngle( origAngle );
 }
 
 double QgsTemplatedLineSymbolLayerBase::markerAngle( const QPolygonF &points, bool isRing, int vertex )
@@ -1856,7 +1850,6 @@ void QgsTemplatedLineSymbolLayerBase::renderOffsetVertexAlongLine( const QPolygo
     return;
 
   QgsRenderContext &rc = context.renderContext();
-  double origAngle = symbolAngle();
   if ( qgsDoubleNear( distance, 0.0 ) )
   {
     // rotate marker (if desired)
@@ -1866,7 +1859,7 @@ void QgsTemplatedLineSymbolLayerBase::renderOffsetVertexAlongLine( const QPolygo
       if ( points.first() == points.last() )
         isRing = true;
       double angle = markerAngle( points, isRing, vertex );
-      setSymbolAngle( origAngle + angle * 180 / M_PI );
+      setSymbolLineAngle( angle * 180 / M_PI );
     }
     renderSymbol( points[vertex], context.feature(), rc, -1, context.selected() );
     return;
@@ -1895,7 +1888,7 @@ void QgsTemplatedLineSymbolLayerBase::renderOffsetVertexAlongLine( const QPolygo
       // rotate marker (if desired)
       if ( rotateSymbols() )
       {
-        setSymbolAngle( origAngle + ( l.angle() * 180 / M_PI ) );
+        setSymbolLineAngle( l.angle() * 180 / M_PI );
       }
       renderSymbol( markerPoint, context.feature(), rc, -1, context.selected() );
       return;
@@ -2227,14 +2220,17 @@ void QgsMarkerLineSymbolLayer::toSld( QDomDocument &doc, QDomElement &element, c
     strokeElem.appendChild( graphicStrokeElem );
 
     QgsSymbolLayer *layer = mMarker->symbolLayer( i );
-    QgsMarkerSymbolLayer *markerLayer = static_cast<QgsMarkerSymbolLayer *>( layer );
-    if ( !markerLayer )
+    if ( QgsMarkerSymbolLayer *markerLayer = dynamic_cast<QgsMarkerSymbolLayer *>( layer ) )
     {
-      graphicStrokeElem.appendChild( doc.createComment( QStringLiteral( "MarkerSymbolLayerV2 expected, %1 found. Skip it." ).arg( layer->layerType() ) ) );
+      markerLayer->writeSldMarker( doc, graphicStrokeElem, props );
+    }
+    else if ( layer )
+    {
+      graphicStrokeElem.appendChild( doc.createComment( QStringLiteral( "QgsMarkerSymbolLayer expected, %1 found. Skip it." ).arg( layer->layerType() ) ) );
     }
     else
     {
-      markerLayer->writeSldMarker( doc, graphicStrokeElem, props );
+      graphicStrokeElem.appendChild( doc.createComment( QStringLiteral( "Missing marker line symbol layer. Skip it." ) ) );
     }
 
     if ( !gap.isEmpty() )

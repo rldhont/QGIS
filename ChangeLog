@@ -1,3 +1,2129 @@
+Jürgen E. Fischer <jef@norbit.de>	2021-09-10
+
+    translation update for 3.16.11 from transifex
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-09-09
+
+    [offline editing] fix overwriting of first field on remote layer when it has virtual fields (#45002)
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-09-07
+
+    fix locator crash with all layers filter (#44972)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-26
+
+    Fix a crash when destroying an extent widget while the "draw on canvas"
+    option is still active
+
+Jürgen E. Fischer <jef@norbit.de>	2021-08-23
+
+    fix build on mac (followup 322ae33924429)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-08-23
+
+    crssync: write settings to temporary directory (fixes #44793)
+
+    (cherry picked from commit 8b2a3360b26ca9644c7d22ca48664541f332d40a)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-20
+
+    Don't try to update joined attributes during form initialization
+
+    Refs #44768
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-20
+
+    Fix crash when opening form with joined attributes
+
+    Fixes #44768
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-08-12
+
+    [layout] Allow negative values for grid offset
+
+    Add the "minimum" property to mOffsetXSpinBox and mOffsetYSpinBox in order to allow the use of negative values for the map grid offset.
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-08-12
+
+    [layout] Fix max grid interval value
+
+    Increase the maximum value for mIntervalXSpinBox, mIntervalYSpinBox, mOffsetXSpinBox and mOffsetYSpinBox
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-08-11
+
+    [aggregate calculator] Improve result type detection to fix bogus typeless scenarios
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-12
+
+    sipify
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-10
+
+    Sipify
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-10
+
+    Raise IndexErrors instead of crashing when an invalid index is
+    passed to QgsAttributeTableConfig methods from Python
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-09
+
+    [expressions] Don't cache aggregate results if there's an evaluation error.
+
+    Otherwise subsequent evaluations of the expression will happily
+    grab the cached null variant, unaware that it's actually a
+    result of a broken expression and not a valid null aggregate
+    calculation.
+
+    (cherry picked from commit 97f024206bc1c725e979ac14eb8b6e539c5671e0)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-03
+
+    Fix indentation issue
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-03
+
+    Initialize return buffers in GetRawChar8 et al. (Port DWG read fix
+    from https://github.com/LibreCAD/libdxfrw)
+
+    From the upstream message:
+    GetRawChar8() would return spurious memory contents when the read
+    failed,leading to weird crashes later in the code.
+    Seen with older non-Autocad DWG files (that Autodesk DWG Trueview
+    however accepts with just a warning about their foreign origin)
+    obtained from RC model plane enthusiasts' free plans archive
+    aerofred.com, e.g. their "Canadair p5.dwg"
+
+    https://github.com/LibreCAD/libdxfrw/commit/082409c03dfb90ac02c8a9354189206f2a771951
+
+Samweli <samweli@kartoza.com>	2021-08-06
+
+    set singleFile property inside the QgsLayoutAtlas constructor
+
+Samweli <samweli@kartoza.com>	2021-08-04
+
+    fix singleFile property issue
+
+uclaros <uclaros@gmail.com>	2021-08-04
+
+    Fix sticky buttons in expression builder
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-08-03
+
+    Fix handleSSlError ignore saved errors
+
+Richard Duivenvoorde <richard@duif.net>	2021-08-03
+
+    Fix for not resetting numberOf(left)Segments when switching scalebar unit
+
+Richard Duivenvoorde <richard@duif.net>	2021-08-03
+
+    Textual fix
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-07-30
+
+    fix building of process without bindings
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-27
+
+    Fix leaked GDAL dataset handle when deleting layers
+
+    Prevents the deletion from actually occurring until QGIS is closed
+
+    (cherry picked from commit 842485f7514f7f334a1cd8a43609c032cd98c3a5)
+
+Bas Couwenberg <sebastic@xs4all.nl>	2021-02-23
+
+    Add support for PROJ 8.0.0 in FindProj.cmake.
+
+    proj_api.h is no longer available in PROJ 8.0.0, use proj.h instead.
+
+    Fixes: #41735
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-27
+
+    Fix incomplete message bar messages when exporting items from model
+    designer
+
+    (cherry picked from commit 1b9295195796a4a2d8319aad3e50f906abcf9b38)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-22
+
+    Cleaner loop
+
+    (cherry picked from commit 6527d59118fff87b4fafa8e7909f22de48f3bf76)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-20
+
+    Fix crash in vector layer iteration on Qt6 builds
+
+    Decrementing an iterator which is already at the beginning results
+    in a crash
+
+    (cherry picked from commit 6776b1b0d79450ed468679059fa507218c5e9a14)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-21
+
+    [ogr] Report ESRI multipatch GDB layers as multipolygonz layers
+
+    Apply the same workaround we use for multipatch shapefiles to
+    GDB sources
+
+    (cherry picked from commit 7b283b33aec629a479f62f45cf4b3f7f93f534c1)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-19
+
+    Rework API and improve memory handling of graph objects
+
+    Instead of QgsGraphBuilder::graph() taking the ownership of the graph
+    and leaving the QgsGraphBuilder in an unpredictable state, add an
+    explicit "takeGraph" method which takes the existing graph and
+    make the existing "graph" method just return a copy of the graph.
+
+    Also fix corresponding memory leaks in network analysis processing
+    algorithms.
+
+    Fixes #44079
+
+    (cherry picked from commit 404094776cf09ef9a5f7ad1800390b721c972f80)
+
+Even Rouault <even.rouault@spatialys.com>	2021-07-21
+
+    QgsProcessingFeedback: limit number of messages to avoid blowing RAM (fixes #44202)
+
+Even Rouault <even.rouault@spatialys.com>	2021-07-21
+
+    QgsProcessingAlgorithmDialogBase: limit number of info messages to avoid blowing RAM (fixes #44202)
+
+Even Rouault <even.rouault@spatialys.com>	2021-07-21
+
+    QgsMessageLogViewer: limit number of messages to avoid blowing RAM (fixes #44202)
+
+Merge: e5b665e952 615069e0f1
+Even Rouault <even.rouault@spatialys.com>	2021-08-17
+
+    Merge pull request #44719 from qgis/backport-44718-to-release-3_16
+
+    [Backport release-3_16] Fix crash when holding tab key in some circumstances
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-17
+
+    Fix crash when holding tab key in some circumstances
+
+    Fixes #44669
+
+Jürgen E. Fischer <jef@norbit.de>	2021-08-13
+
+    Release of 3.16.10
+
+Jürgen E. Fischer <jef@norbit.de>	2021-08-13
+
+    translation update for 3.16.10 from transifex
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-08-06
+
+    [processing] Fix rasterlayerzonalstats when input raster has no CRS
+
+    Use "area" as the area column name instead of an empty name.
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-06
+
+    Update python/plugins/MetaSearch/resources/connections-default.xml
+
+alitka <anja.litka@bkg.bund.de>	2021-08-05
+
+    updated connections-default.xml
+
+    line 18 - added the German spatial data catalogue (GDI-DE Geodatenkatalog.de) of the Spatial Data Infrastructure Germany (GDI-DE) to the list of the default connections
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-08-05
+
+    fix dockerfile path so it matches master (#44576)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-08-05
+
+    Disable ultra-fragile mesh terrain rendering test on CI
+
+Germap <gcarrillo@linuxmail.org>	2021-08-02
+
+    [processing] Fix typo in algorithm description
+
+qgis-bot <58983587+qgis-bot@users.noreply.github.com>	2021-08-03
+
+    [Backport release-3_16] Fix atlas filtering when exporting using processing algorithms (#44519)
+
+    * filter features when exporting atlas image and filter is enabled
+
+    * filter features when exporting atlas pdf and filter is enabled
+
+    * fixed tests
+
+    * removed functions for filtering and unfiltering the atlas coverage layer
+
+    Co-authored-by: Samweli <samweli@kartoza.com>
+
+Merge: dce8b2d5ed 2a7d6c7449
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-08-02
+
+    Merge pull request #44510 from mhugent/backport_3_16_max_image_width
+
+    Backport 3_16 max image width/height for GetLegendGraphic
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-08-01
+
+    Update src/server/services/wms/qgswmsrenderer.cpp
+
+    Co-authored-by: Alessandro Pasotti <elpaso@itopen.it>
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-08-01
+
+    Update src/server/services/wms/qgswmsrenderer.cpp
+
+    Co-authored-by: Alessandro Pasotti <elpaso@itopen.it>
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-07-31
+
+    Consider maximum image width/height also for GetLegendGrahic
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-30
+
+    Fix missing icon in GPS information panel
+
+    Fixes #44165
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-27
+
+    Fix TabInformation equality operator signatures
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-22
+
+    Fix misleading messages when trying to delete ogr sublayer
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-07-02
+
+    Fix typo in QgsMapSettings::visibleExtent() doc
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-07-01
+
+    Fix scalebar decoration in rotated map
+
+    Reset the map rotation before calculating the map width
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-15
+
+    [processing] Fix missing fields in data defined expression builder
+    when input layer is using selected features only
+
+    Fixes #40055
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-07-09
+
+    [processing] Fix file download alg stuck in infinit loop when network errors occur
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-06-28
+
+    Fixes #37945 : Take tile_buffer parameter into consideration when
+    rendering labels
+
+speillet <sebastien.peillet@oslandia.com>	2021-07-05
+
+    fix project dirtiness when changing layout name
+
+pathmapper <pathmapper@posteo.de>	2021-07-05
+
+    std::make_unique -> qgis::make_unique
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-07-01
+
+    [processing] Fix default value of multiple field selection inputs
+    in models cannot be set to no value
+
+    Fixes #44005
+
+Joonalai <joona@gispo.fi>	2021-06-30
+
+    [fix] #43905 append OAPIF extra query params if url is not empty
+
+Joonalai <joona@gispo.fi>	2021-06-30
+
+    Test for regression #43905 OAPIF extra query params
+
+Paul Blottiere <blottiere.paul@gmail.com>	2021-06-28
+
+    Fix OGC workflow (#43946)
+
+Blottiere Paul <blottiere.paul@gmail.com>	2021-06-18
+
+    Update results
+
+Blottiere Paul <blottiere.paul@gmail.com>	2021-06-17
+
+    Fixes WMTS GetCapabilities and axis order
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-06-22
+
+    Fix UnicodeDecodeError in Processing history
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-17
+
+    [processing] Fix use of data defined parameter values when editing
+    features in place
+
+    Fixes #43758
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-16
+
+    [layouts] Fix bounding rectangle for shapes doesn't include stroke
+    width after loading from xml
+
+    Fixes #43748
+
+Merge: bea6d91466 2239b02293
+Even Rouault <even.rouault@spatialys.com>	2021-07-21
+
+    Merge pull request #44304 from qgis/backport-44290-to-release-3_16
+
+    [Backport release-3_16] Fix opacity slider crash
+
+Matthias Kuhn <matthias@opengis.ch>	2021-07-21
+
+    Fix opacity slider crash
+
+    Fixes a race condition introduced by the timer.
+
+Even Rouault <even.rouault@spatialys.com>	2021-07-20
+
+    Check Geometries/Check for duplicates: avoid assertion in debug builds due to thread-unsafe usage of layer() method (fixes #44246)
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-07-21
+
+    Test "substr" function with named parameters
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-07-20
+
+    Fix substr expression function named parameters
+
+    Fix the "substr" function removing a trailing white space in the named parameter "start"
+
+Jürgen E. Fischer <jef@norbit.de>	2021-07-19
+
+    Release of 3.16.9
+
+Jürgen E. Fischer <jef@norbit.de>	2021-07-19
+
+    translation update for 3.16.9 from transifex
+
+vcloarec <vcloarec@gmail.com>	2021-07-06
+
+    std::as_const --> qgis::a_const
+
+vcloarec <vcloarec@gmail.com>	2021-07-04
+
+    fix updating disabled scalar dataset group for mesh layer
+
+Jürgen E. Fischer <jef@norbit.de>	2021-07-05
+
+    fix build (followup e82015b639b)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-07-02
+
+    fix build (followup e82015b639b)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-06-26
+
+    tstat.pl: switch to Locales
+
+    (cherry picked from commit 8dde0b1fdc0b6324ed9196d7dcdaee791d5cd9db)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-06-25
+
+    initialize embedded python to UTF-8 mode only with Python >=3.8 (followup 61c79736d06d234)
+
+    (cherry picked from commit 65676da81619249f479e6e932aa64ba756d4deca)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-06-23
+
+    initialize embedded python to UTF-8 mode (fixes #43834)
+
+    (cherry picked from commit 61c79736d06d234b9b3c023907d37d2b486efd0e)
+
+nicogodet <39594821+nicogodet@users.noreply.github.com>	2021-06-23
+
+    typo
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-23
+
+    [layouts] Restore forced rasterization of whole layout map item
+    when a layer has opacity set for Qt < 5.15
+
+    Workarounds bugs in the PDF export for these earlier versions
+
+    Fixes #42698
+
+nicogodet <nicolas.godet@outlook.fr>	2021-06-21
+
+    Allow 2 decimals for raster contour intervals
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-18
+
+    remove boundingBoxIntersects which was not present in the original pr
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-08
+
+    is2DClosed -> isClosed2D and fix a typo
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-07
+
+    adds test from #43582
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-07
+
+    Indicates z
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-07
+
+    Adds information when a line is 2D closed but Z are differents. While here, add the start point on QgsGeometry Error in QgsGeometryValidator method. Fixes #43582
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-07
+
+    add a is2DClosed test
+
+Blottiere Paul <blottiere.paul@gmail.com>	2021-06-17
+
+    An error message is displayed when an auxiliary layer cannot be created
+
+vcloarec <vcloarec@gmail.com>	2021-06-16
+
+    test for  mesh calculator IF operator and temporal dataset group
+
+vcloarec <vcloarec@gmail.com>	2021-06-15
+
+    fix mesh calculator IF operator
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-10
+
+    Fix temporal fields reset if previously set to no value
+
+    Fixes #43643
+
+    (cherry picked from commit ab1ff23de676f4d35eafd684edab8d721aef74b8)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-10
+
+    Use more explicit variable name for filter range
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-07
+
+    [temporal] Fix filter generation for vector temporal layers
+
+    When features have a temporal "range", we should never treat
+    that range as inclusive of the end (or we end up with features
+    appearing in multiple date ranges)
+
+    Completes fixes begun by @rduivenvoorde in https://github.com/qgis/QGIS/pull/40989
+
+    Fixes #38468
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-06-11
+
+    more precise tooltips for buttons in relation editor
+
+    fixes #34477
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-06-10
+
+    [locator] add open form action, automatically open form for non geometric layers
+
+    manual backport of #43462
+
+Damiano Lombardi <damiano@opengis.ch>	2021-06-10
+
+    Fix #43539, backport from #43579
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-06
+
+    Fix build
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-03
+
+    Fix it's impossible to change a rule based labeling "else" rule
+    back to a normal rule
+
+    Port fixes from rule based renderer else handling to rule based
+    labeling
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-03
+
+    Fix papercut in rule based labeling widget where it's possible
+    to uncheck BOTH the filter and else radio buttons
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-06-09
+
+    [expression] Allow use of (and return null to) index operator against null node/value
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-06-07
+
+    Update src/app/qgsfeatureaction.cpp
+
+    Co-authored-by: Matthias Kuhn <matthias@opengis.ch>
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-06-07
+
+    Do not set initial attr values for default clause
+
+    Fixes #42909
+
+    Setting intial values from previously entered values when
+    they are equal to the default was pointless anyway because
+    QgsVectorLayerUtils::createFeature will do that a few lines
+    below.
+
+    Setting the default value for unique constraints
+    was triggering unique checks for no reason and slowing down
+    the feature creation up to the point that for large layers
+    QGIS froze.
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-04
+
+    reinstate QWTPOLAR_LIBRARY. Fixes #41910
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-06-04
+
+    Add test for GRASS r.proj alg
+
+    (cherry picked from commit 7d57aeef225e5a80255c2a4ed3b5b3eff7c3e609)
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-06-03
+
+    [processing][grass] Fix r.proj in Windows
+
+    Properly escape the equal sign in the for /f command and fix a typo in the variable name
+
+    (cherry picked from commit 57326cbb2070c82b8dbaf4168123af854e780843)
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-06-02
+
+    Fixes #33108 : Fix displayed array list in query builder
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-03
+
+    fix build
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-03
+
+    remove the png icon
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-03
+
+    BTW use the svg icon
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-03
+
+    Fixes missing icon for geometry checker plugin. Fixes #42708
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-06-04
+
+    [Geometry checker] Fix the error resolution ui. Fixes #42489
+
+    method.id() always returns 0, I put back the old mechanism which works.
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-06-03
+
+    Fixes #40117 : Copy CRS to clipboard when copying selected features
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-06-02
+
+    [PyQGIS] Fixes qgis#42488 : Fix QgsFeatureFilterModel SIP interface
+
+Olivier Dalang <olivier.dalang@gmail.com>	2021-06-01
+
+    fix convertToCurve not converting CURVEPOLYGON
+
+Olivier Dalang <olivier.dalang@gmail.com>	2021-06-01
+
+    fix convertToCurve not converting CURVEPOLYGON (failing test case)
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-06-01
+
+    [Postgres] Fixes #42778 : don't quote integer array elements to match array_out()
+
+komima <58747243+komima@users.noreply.github.com>	2021-05-26
+
+    Fix Python module enviroment setup on Windows
+
+
+    - Trim trailing newline when reading .env lines
+    - Skip empty, commented and non "key=value" lines
+    - Allow = chars in values using maxsplit=1
+    - No special quote handling, use values as is
+
+    Fixes #43308
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-28
+
+    [symbols] Fix marker symbol bounds incorrectly include bounds of
+    disabled symbol layers
+
+    (cherry picked from commit ca54e8f8520453954e06e4d91adbd375287ddadd)
+
+nicogodet <39594821+nicogodet@users.noreply.github.com>	2021-06-01
+
+    fix auto populating when input param is QgsProcessingParameterMapLayer
+
+    (cherry picked from commit 2e5e6264bf32d1088e678aeae3e805106eff405c)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-28
+
+    Don't try to render font marker symbols in massive font sizes
+
+    Instead, scale the painter after the font exceeds a certain threshold.
+    The end result looks the same, but should avoid issues like the
+    crash described in #42270
+
+    Fixes #42270
+
+    (cherry picked from commit a87e3d2e45374ef4ad43449b72dc030e308821cd)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-26
+
+    Sipify
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-26
+
+    Fix build
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-26
+
+    Don't show symbol levels actions in renderer widgets for renderers
+    which are subrenderers for other renderers
+
+    Symbol layers have no effect in this situation (e.g. when a categorized
+    renderer is used as a subrenderer for point displacement renderer), so
+    don't show the option in the GUI
+
+    (cherry picked from commit a3af108a8e6c3bfe402b1125d6edb763ac45fe71)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-26
+
+    Fix memory leaks in renderer widgets
+
+    (cherry picked from commit 9a9b7eebf419a5cc8d223d3465417a46935549da)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-26
+
+    Code cleanup and modernization
+
+    (cherry picked from commit b3f067488682953236b406383b9039c662a34f76)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-26
+
+    Use a safer approach to update renderers after symbol levels are changed
+
+    Instead of directly changing the renderer in place in the symbol levels
+    widget, we delegate responsibility for handling the changes to symbol
+    levels to the parent QgsRendererWidget subclass. This allows us to
+    implement different logic in the various subclasses which correctly
+    handle how that particular widget subclass should update any internal
+    symbol references and ultimately update the renderer.
+
+    Fixes instability and crashes after editing symbol levels.
+
+    Fixes #42671
+
+    (cherry picked from commit 0ba03bd7e66ae77d3696f314439633cbef27ccea)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-29
+
+    Update tests/src/analysis/testqgsinterpolator.cpp
+
+    Co-authored-by: Vincent Cloarec <vcloarec@gmail.com>
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-29
+
+    Update tests/src/analysis/testqgsinterpolator.cpp
+
+    Co-authored-by: Vincent Cloarec <vcloarec@gmail.com>
+
+Vincent Cloarec <vcloarec@gmail.com>	2021-05-29
+
+    Fix qgsinterpolator and qgstininterpolator with NULL value (#43302)
+
+    Fixes #43286, fixes #42689
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-19
+
+    Fix incorrect handling of data type in grass raster data provider
+
+    (cherry picked from commit 50b2ac4c89a669cf08b5db81f62a4f3cf88fc495)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-26
+
+    Sipify
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-24
+
+    Also set correct expression context on feature request
+
+    (cherry picked from commit ba5692c57dd54a410dea59d40c2a48bcf4310a6f)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-24
+
+    Ensure correct expression context is used in map select tools,
+    identify tool, map tips and vertex tool
+
+    Fixes #42006
+
+    (cherry picked from commit 01d971089a5c9f25d6302a05dba0d352dca6375b)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-24
+
+    Make QgsMapCanvas a QgsExpressionContextGenerator
+
+    (cherry picked from commit 79338d130607d6c36c5d4625eb394463c2909d61)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-25
+
+    [OGR provider] Fix conflict between layers using same OGR datasource and layer with subset strings (fixes #43361)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    [WFS provider] Do not issue full layer download when requesting features by fids...
+
+    and when they are already in the local cache.
+
+    Fixes #42049
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-05-21
+
+    Fix SIP issue with return results from calculateStatistics
+
+    Fixes #43245
+
+    SIP failed to convert the QMap<QgsZonalStatistics::Statistic, QVariant>
+    so we give it an QMap<int, QVariant>.
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-10
+
+    [Processing] Fix specific exception type in getParameterFromString
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-07
+
+    [Processing] Fix getParameterFromString to get Vector Layer data types like Feature Source
+
+    In Processing parameter description QgsProcessingParameterVectorLayer multi data types does not work as QgsProcessingParameterFeatureSource.
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-05-05
+
+    [Postgres] Use IN clause instead of OR for whereClause on text primary
+    keys
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-05-17
+
+    [windows] Fix form macro encoding from file on windows
+
+    When loading a python file in a form on windows, the file is opened using the default system encoding (which may be different than UTF8, at least it wasn't on my tests and on my customer machines).
+
+    This patch makes UTF8 the codec used when loading python files from the filesystem before using them for a form.
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-17
+
+    [Tests][Server] Remove print('CTEST_FULL_OUTPUT') and duplicated line
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-11
+
+    [Tests] QGIS Server access control and Postgres layers
+
+    Testing QGIS Sever GetMap request with Postgres layers:
+    * rendering
+    * rendering with acces control
+    * rendering with selection on int pk
+    * rendering with acces control and selection on int pk
+    * rendering with selection on bigint pk
+    * rendering with acces control and selection on bigint pk
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-04-12
+
+    [Server] Fix the selection method in server renderer
+
+    The server feature id is a string and can be based on primary key attributes.
+    The server renderer selection method does not take this into account.
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-05-09
+
+    Add missing documentation
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-05-09
+
+    [editor widgets] Avoid infinite image resize loop
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-05-09
+
+    [editor widgets] Fix external resource's image not cleared when browsing from one feature to another
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-05-07
+
+    [vector file writer] Fix another FID corner scenario (fixes #34613)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-17
+
+    Ensure tests run on queued_ltr_backports PRs
+
+uclaros <uclaros@gmail.com>	2021-05-01
+
+    Manual backport of #42383
+
+Jürgen E. Fischer <jef@norbit.de>	2021-06-18
+
+    Release of 3.16.8
+
+Jürgen E. Fischer <jef@norbit.de>	2021-06-18
+
+    translation update for 3.16.8 from transifex
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-14
+
+    [processing] Fix broken execution of models via browser/drag and drop
+
+    Fixes #43698
+    Fixes #42181
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-06-15
+
+    Fix #43741 estract SHP encoding
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-10
+
+    Gracefully handle coordinate transform errors in data defined label pos
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-09
+
+    Fix crash in labeling if label has data defined x/y set and projection error occurs transforming these coordinates
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-09
+
+    Fix zonal statistics does not correctly handle coordinate transforms
+
+    Fixes #26858
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-09
+
+    Don't assume that owslib >= 0.20 is available
+
+    Fixes #38074
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-11
+
+    Update src/core/qgsofflineediting.cpp
+
+    Co-authored-by: Harrissou Sant-anna <delazj@gmail.com>
+
+Ivan Ivanov <ivan.ivanov@suricactus.com>	2021-06-10
+
+    Add layer validity checks and hints where not to expect nullptr
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-10
+
+    Don't crash when calculating centroid of empty geometry
+
+    Refs #38983
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-10
+
+    Fix crash in geometry checker when empty geometries are found
+
+    Fixes #38983
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-09
+
+    Correctly redraw canvas when applying project properties changes
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-08
+
+    Fix massive performance regression in attribute table
+
+    Follow up 56f7812ca1e
+
+    This commit fixed the ordering of features coming from the
+    vector layer cache for the attribute table, but came with a massive
+    speed impact due to the repeated calls QList::contains for
+    every feature fetched. For any moderately sized table or above
+    these calls stacked up into multiple minute delays in opening
+    the table.
+
+    Avoid this by tracking the added feature ids in a separate
+    unordered set, so that we don't need to check through the
+    ordered list for existing features at all.
+
+    Eg a 500k feature gpkg was taking 10 minutes to open the table.
+    With this optimization that's back down to 20 seconds.
+
+    (cherry picked from commit b4757dacc679914441920c739084de412281eb27)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-08
+
+    Fix "force layer to render as raster" setting wasn't correctly copied
+    with cloned renderers
+
+    And move more common code to QgsFeatureRenderer::copyRendererData
+
+    Fixes #43535
+
+    (cherry picked from commit 4e40323a3263016ff716f64d1d38d49c82ddcf54)
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-06-03
+
+    fix filter expression not correctly loaded for relation reference widget after project loading
+
+    fixes #42803
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-08
+
+    Fix build
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-08
+
+    Fix build
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-07
+
+    Dox++
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-03
+
+    [dxf] Fix broken coordinate transform when exporting features
+    to DXF, add tests
+
+    Fixes #43449
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-03
+
+    Fix clazy warnings in dxf export
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-08
+
+    Fix data type for feature count in overlay algorithms
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-08
+
+    Don't try to continue calculating union steps after cancelation occurs
+
+    Fixes #43553
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-06-07
+
+    Fix data defined properties which bind to a field can have incorrect
+    values when the linked field has a null value
+
+    (cherry picked from commit bb131c566ae448ae087475c0f67f519603a6de5f)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-06-07
+
+    WMS: don't crash on invalid layers
+
+    Fixes #43580
+
+Matthias Kuhn <matthias@opengis.ch>	2021-06-04
+
+    Fix geographicflag loading
+
+    Fixes #43556
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-28
+
+    [server] Fix incorrect response code used for exception
+
+    (cherry picked from commit 3cc20607bcfbd2b058618b8b49d8f61ccef597b1)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-29
+
+    Completely remove QgsVectorLayerFeatureIterator::FetchJoinInfo::joinLayer and note in api_break.dox
+
+    There's no point in keeping such a dangerous member in the api
+
+    (cherry picked from commit b1ddf5f46112bac2c61f3860b60d2774d0d64ca6)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-29
+
+    Fix sip
+
+    (cherry picked from commit fe48b191d2e2c8d2364a14a10fb1e91eb7900c1c)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-28
+
+    Do not access join layer from QgsVectorLayerFeatureIterator
+
+    This is not thread safe at all - we cannot access a layer from
+    an iterator, as iterators may be running on background threads.
+
+    Instead use a thread safe approach of storing a QgsVectorLayerFeatureSource
+    and using that instead
+
+    Fixes #38551
+
+    (cherry picked from commit b4d1dd8771f700d0f1c2048cd1d0fc69466d32b1)
+
+qgis-bot <58983587+qgis-bot@users.noreply.github.com>	2021-06-02
+
+    Push image to DockerHub only if rep_owner == qgis (#43513)
+
+    Allow a more comfortable play with tests in a forked repository.
+
+    Co-authored-by: MorriganR <d_daryna@knu.ua>
+
+vcloarec <vcloarec@gmail.com>	2021-05-31
+
+    [backport] fix classification of singleband pseudocolor (#43346)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-31
+
+    Fix various crashes on a vector layer with a broken provider
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-05-31
+
+     Server: fix unreported project storage not supported with -p
+
+    -p only supported filesystem storage this PR fixes this
+    behavior by initializing providers before the project
+    is loaded and by attempting a project read instead of
+    just checking for the file.
+
+    Backported from master 545dcacb23ef6e5e87d0328f3dd07b999023dd6d
+
+Blottiere Paul <blottiere.paul@gmail.com>	2021-05-31
+
+    VERSION is mandatory for getmap requests in WMS 1.3.0
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-20
+
+    [OGR provider] Fix wrong gpkg_metadata_reference_column_name_update trigger
+
+    Fixes #42768
+
+    Proper GDAL fix in https://github.com/OSGeo/gdal/pull/3863
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-05-25
+
+    Fix test control file for WFS3 items
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-05-24
+
+    Fix WFS3 overlapping text template
+
+    Fixes: #42269
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-24
+
+    QgsOgrLayer::GetApproxFeatureCount(): fix wrong test on WFS3 driver name
+
+    WFS3 was the name in GDAL 3.0, before we changed to OAPIF in 3.1
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-20
+
+    [OGR provider] Do not corrupt values when updating a GPKG feature
+
+    and that the fid value is included in the fields to update, and that it
+    doesn't change.
+
+    Also rollback all changes if an update of FID is attempted.
+
+    Fixes #42274
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    [WFS provider] Transmit error message of feature downloader to provider
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    [WFS provider] Use ows:ExceptionReport for error message (fixes #42985)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    QgsSQLStatement parser: emit more relevant error message (fixes #42985)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    [WFS provider] Encode space as %20 in URL
+
+    Relates to #42985
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    QgsVectorDataProvider::convertToProviderType(): accept converting a single-part multigeometry to single geometry
+
+    Fixes #41283
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    QgsVectorLayerEditBuffer::commitChanges(): do not do anything if added features are of incompatible type
+
+    Fixes #41283
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    [OGR provider] Make changeGeometryValues() return false when an error occurs
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    [WFS provider] Accept 'code' attribute in ExceptionReport (fixes #42196)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-21
+
+    [Delimited provider] Increase buffer size to 10 MB to be able to read huge WKT (fixes #43256)
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-20
+
+    [OGR provider] Workaround crash on SQLite layers with GDAL 3.3.0
+
+    Fixes #43224
+
+    Proper fix is in GDAL in https://github.com/OSGeo/gdal/pull/3862
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-20
+
+    [WMS provider] Fix crash on WMS-T layer uri without timeDimensionExtent
+
+    Fixes #43158
+
+Paulo van Breugel <paulo@ecodiv.org>	2021-05-21
+
+    Update r.clump.txt
+
+    Add missing threshold parameter. It sets a threshold to identify similar cells. Floating number, valid range: 0 = identical to < 1 = maximal difference. Default: 0
+
+Blottiere Paul <blottiere.paul@gmail.com>	2021-05-19
+
+    Update pyogctest
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-04-23
+
+    [DB Manager] Fix No Geometry tables
+
+    Avoid to add a nonexistent 'geometry' field to the fields list of No Geometry tables.
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-04-23
+
+    [DB Manager] Fix recognition of project layers with Z/M…
+
+    …or CurvePolygon/MultyCurve/... geometry types as spatial layers.
+
+Loïc Bartoletti <loic.bartoletti@oslandia.com>	2021-04-27
+
+    [BUGFIX] Fixes QgsPostgresProviderConnection::createSpatialIndex. Adds quotedIdentifier to avoid failure when indexName contains 'invalid' characters
+
+uclaros <uclaros@gmail.com>	2021-04-24
+
+    Call proper parent deactivate() for QgsMapToolMoveFeature
+
+    (cherry picked from commit 90df2b3d782966bf767122728716496500e202c6)
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-04-19
+
+    Add a test covering data defined angle for polygon outline marker line, update one control image
+
+    (cherry picked from commit 925b8274290c70b36e3ba3850ea74896bb3892bd)
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-04-18
+
+    [symbology] Make use of the marker symbol line angle for all polyline templated line rendering
+
+    (cherry picked from commit 34ae29f7a6fb05d9789a6b0c0df141222e2e5f63)
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-03-31
+
+    Ensure that cached vector getFeatures request respect provider ordering
+
+    (cherry picked from commit 56f7812ca1e9f80571c9e86d776153520ae0ef52)
+
+vcloarec <vcloarec@gmail.com>	2021-04-14
+
+    backport #42713
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-04-12
+
+    [Server] QgsServerFeatureId use STRING_TO_FID instead of toLongLong
+
+    As in ohter part of the QGIS Server code, to insert into a QgsFeatureIds list, using STRING_TOFID instead of toLongLong.
+
+    (cherry picked from commit e61d4c576553fd02c03f15a4a18218bc53e58b81)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-05-14
+
+    Release of 3.16.7
+
+Jürgen E. Fischer <jef@norbit.de>	2021-05-14
+
+    translation update for 3.16.7 from transifex
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-06
+
+    [Processing][Test] QgsProcessingParameterVectorLayer description string - Deactivated tests
+
+    QgsProcessingParameterVectorLayer multi data types does not work as QgsProcessingParameterFeatureSource
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterRasterLayer description string
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterVectorLayer description string
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterFeatureSource description string
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterFileDestination description string
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterFolderDestination description string
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterRasterDestination description string
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterVectorDestination description string
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    [Processing][Test] QgsProcessingParameterFile description string
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-05-04
+
+    Update python/plugins/processing/tests/ParametersTest.py
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-04
+
+    fix number
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-03
+
+    Tests QgsProcessingParameterExtent
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-03
+
+    Tests QgsProcessingParameterCrs
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-03
+
+    Tests QgsProcessingParameterBoolean
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-03
+
+    Fix number
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-03
+
+    Tests QgsProcessingParameterNumber
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-03
+
+    fix lint
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-05-03
+
+    [Tests][Processing] Add getParameterFromString tests
+
+    The Procesing plugins provide a method to get parameter from string.
+    The string can be based on the QGIS parameter `asScriptCode` / `fromScriptCode` string definition or
+    on the QGIS definitions used in description file.
+
+Even Rouault <even.rouault@spatialys.com>	2021-05-07
+
+    QgsAppMapTools: fix double-free during destruction of tools
+
+    and do it also in QgsMapToolAddEllipse, QgsMapToolAddRectangle,
+    QgsMapToolAddRegularPolygon and QgsMapToolAddCircularString that
+    use a similar pattern
+
+    spotted by Valgrind when quitting the app:
+    ```
+    ==80600== Invalid read of size 8
+    ==80600==    at 0x61C0F54: swap<QgsMapToolCaptureRubberBand*> (move.h:193)
+    ==80600==    by 0x61C0F54: reset (unique_ptr.h:400)
+    ==80600==    by 0x61C0F54: QgsMapToolCapture::deleteTempRubberBand() (qgsmaptoolcapture.cpp:848)
+    ==80600==    by 0x4DF1017: QgsMapToolAddCircle::clean() (qgsmaptooladdcircle.cpp:135)
+    ==80600==    by 0x4DF1390: QgsMapToolAddCircle::~QgsMapToolAddCircle() (qgsmaptooladdcircle.cpp:41)
+    ==80600==    by 0x4DF36BC: QgsMapToolCircle2TangentsPoint::~QgsMapToolCircle2TangentsPoint() (qgsmaptoolcircle2tangentspoint.cpp:44)
+    ==80600==    by 0x4E9516E: QgsAppMapTools::~QgsAppMapTools() (qgsappmaptools.cpp:185)
+    ==80600==    by 0x4B327D2: operator() (unique_ptr.h:81)
+    ==80600==    by 0x4B327D2: operator() (unique_ptr.h:75)
+    ==80600==    by 0x4B327D2: reset (unique_ptr.h:402)
+    ==80600==    by 0x4B327D2: QgisApp::~QgisApp() (qgisapp.cpp:1725)
+    ==80600==    by 0x4B32E2C: QgisApp::~QgisApp() (qgisapp.cpp:1787)
+    ==80600==    by 0x1163F7: main (main.cpp:1645)
+    ==80600==  Address 0x2b25e608 is 200 bytes inside a block of size 616 free'd
+    ==80600==    at 0x483D1CF: operator delete(void*, unsigned long) (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+    ==80600==    by 0x4E9516E: QgsAppMapTools::~QgsAppMapTools() (qgsappmaptools.cpp:185)
+    ==80600==    by 0x4B327D2: operator() (unique_ptr.h:81)
+    ==80600==    by 0x4B327D2: operator() (unique_ptr.h:75)
+    ==80600==    by 0x4B327D2: reset (unique_ptr.h:402)
+    ==80600==    by 0x4B327D2: QgisApp::~QgisApp() (qgisapp.cpp:1725)
+    ==80600==    by 0x4B32E2C: QgisApp::~QgisApp() (qgisapp.cpp:1787)
+    ==80600==    by 0x1163F7: main (main.cpp:1645)
+    ==80600==  Block was alloc'd at
+    ==80600==    at 0x483BE63: operator new(unsigned long) (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+    ==80600==    by 0x4E956E2: QgsAppMapTools::QgsAppMapTools(QgsMapCanvas*, QgsAdvancedDigitizingDockWidget*) (qgsappmaptools.cpp:128)
+    ==80600==    by 0x4B6409B: make_unique<QgsAppMapTools, QgsMapCanvas*&, QgsAdvancedDigitizingDockWidget*&> (unique_ptr.h:857)
+    ==80600==    by 0x4B6409B: QgisApp::QgisApp(QSplashScreen*, bool, bool, QString const&, QString const&, QWidget*, QFlags<Qt::WindowType>) (qgisapp.cpp:1052)
+    ==80600==    by 0x1157A7: main (main.cpp:1377)
+    ```
+
+    The reason was that the mParentTool of QgsMapToolCapture was already
+    destroyed
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-05-07
+
+    Release datasource when cancelling loading of OGR sublayers
+
+vcloarec <vcloarec@gmail.com>	2021-04-28
+
+    backport #41362
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-04-28
+
+    Run workflows on queued_ltr_backports branch
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-04-23
+
+    Fix potential nullptr dereference issue in symbol to SLD conversion
+    due to incorrect use of static_cast instead of dynamic_cast.
+
+    And cleanup logic to make it clearer.
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-04-23
+
+    Fix potential crash in mesh renderer vector settings widget
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-04-27
+
+    Properly disable mingw build, disable 20.10 build
+
+Paul Wicks <pwicks86@gmail.com>	2021-04-23
+
+    Move currentFrame increment to the end of the loop
+
+    This fixes a bug that causes the first frame in a temporal
+    animation to be skipped since currentFrame is initialized to be
+    zero, but then before the first frame is rendered frame number is
+    incremented. This is a fix for #42932.
+
+Matthias Kuhn <matthias@opengis.ch>	2021-04-21
+
+    Merge pull request #42869 from m-kuhn/statsbycaterror
+
+    Add safety check for field name in StatisticsByCategories
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-04-20
+
+    Fix opening the console
+
+    when an error occurs (specifically when 3d library is not built) before the console is displayed.
+
+uclaros <uclaros@gmail.com>	2021-04-18
+
+    FlatGeobuf is always UTF-8
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-04-18
+
+    Disable mingw build
+
+    The environment is broken for unknown reasons
+
+Sebastian <18557959+fiddlersfan@users.noreply.github.com>	2021-04-16
+
+    switch from baseName to completeBaseName
+
+Harrissou Sant-anna <delazj@gmail.com>	2021-04-16
+
+    "Flatten relationship" alg output can not be skipped
+
+nilsnolde <nils.nolde@gmail.com>	2021-04-03
+
+    adapt python blocking request test to contain a valid response after server error
+
+    (cherry picked from commit 21540f2427573252d05cb8f5d8b5054b45315d4c)
+
+nilsnolde <nils.nolde@gmail.com>	2021-04-02
+
+    allow a failed QNetworkRequest to set a QgsNetworkReplyContent.content() for custom server error messages
+
+    (cherry picked from commit 5be88464a0161f11832d04c01911bb1d2cbfaf7b)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-04-03
+
+    Gracefully handle import errors in console
+
+    Fixes opening the console when 3d library is not built
+
+    Fixes #41855
+
+    (cherry picked from commit 12905ccf4e9486b3f0ad7f0cecd9b68a4c0b2c15)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-09
+
+    indentation
+
+    (cherry picked from commit a62fc8b685776b38531784fb96635f3bf5fa080e)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-09
+
+    Apply suggestions from code review
+
+    Co-authored-by: Nyall Dawson <nyall.dawson@gmail.com>
+    (cherry picked from commit 2adf89c98dd895206b7bc9a72134186042b9ab62)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-08
+
+    WMS cascading: fix unreported issue wih missing fids
+
+    1. in WMS provider try to set fid from external getFeatureInfo JSON response
+    2. in WMS server, make sure we transform integer FID to string
+
+    This fixes an unreported issue where getFeatureInfo from cascaded WMS in
+    JSON format have no feature IDs.
+
+    Funded by Gis3W https://www.gis3w.it
+
+    (cherry picked from commit 0189efa7ca0a5a100d04a9f2e0e183ffeb8cb9f2)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-25
+
+    Apply suggestions from code review
+
+    (cherry picked from commit df7e8afa1823afb6ad26e908d36861c6c57f5c23)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-23
+
+    Prevent double expensive calls to loadFields in OGR
+
+    (cherry picked from commit 0391b1515710a48e7eb8c5628ddcbd0908fce5d4)
+
+David Marteau <dmarteau@3liz.com>	2021-03-23
+
+    Add multipart option for processing geometry parameter
+
+    (cherry picked from commit 9eb172aa8eef688c66ef3d8d78242700b5b7f297)
+
+D'Hont René-Luc <rldhont@gmail.com>	2021-03-23
+
+    [Vector] Use XML Extent even if data provider has metadata
+
+    The XML extent was only used if the data provider has no metadata.
+    This means that only PostGIS views and materialized views can benefit from the use of the XML Extent.
+
+    This commit removes this constraint
+
+    (cherry picked from commit b681de9a2f1b1a854f88175ac375c965e1ef8536)
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-03-26
+
+    Update qgsfeaturepickermodelbase.h
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-03-26
+
+    Update qgsfeaturelistcombobox.sip.in
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-03-26
+
+    fix sip
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-03-23
+
+    Update src/gui/qgsfeaturelistcombobox.h
+
+    Co-authored-by: Mathieu Pellerin <nirvn.asia@gmail.com>
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-03-22
+
+    remove leftover
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-03-18
+
+    fix open form button not always enabled in relation reference widget (#42144)
+
+    * fix open form button not always enabled in relation reference widget
+
+    when the underlying model has more feature than what the model fetches by default (100),
+    the feature is not fetched yet when the combobox has its index changed
+
+    the new signal allows to be aware when the feature is ready to be used
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-23
+
+    [Backport release-3_16][Server] Speed up WMS GetCapabilities by removing featureCount
+
+    Backport 803848a85547e776936aa4d6b3b3daecf224b1be from #42409
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-03-27
+
+    Fix fid collisions when pasting features into a gpkg/spatialite dataset
+
+    (cherry picked from commit cb24fe48e1f4896b1eaf05834b7c880a9978faa6)
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-03-25
+
+    [labeling] Fix handling of data-defined buffers (both UI/UX and rendering behavior)
+
+    (cherry picked from commit 1a7fe6ae5557b640cf0fea704b38c1918551994a)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-25
+
+    Revert: utf8->latin1
+
+    (cherry picked from commit b2f29552442f14d2e0fb5cab13eb141e35edf5bb)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-25
+
+    Fix wms autorization logic
+
+    (cherry picked from commit 8379adb931319c2b6b3b37ebbd995326b64dfcd8)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-25
+
+    Fix auth basic encoding (no auth system)
+
+    Followup #42410
+
+    Fixes #42405
+
+    (cherry picked from commit 1ba3c264f9ff9cfb2db145381d645c0306a952db)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-25
+
+    Fix invalid cast of QgsProperty as bool to store in strings
+
+    (cherry picked from commit 253e0174f1e0c49432bdeb2b9c7ef9349cf3ea2b)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-23
+
+    Fix mesh layer properties dialog doesn't open at the temporal page
+    when clicking the temporal icon for a mesh layer
+
+    (cherry picked from commit b378138b7fc7fb8c10a120a693bfe2f1d7f38f0b)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-24
+
+    [processing][saga] Fix misleading 'layer could not be generated' error
+    after running algorithms which create raster files
+
+    (cherry picked from commit 286fd207c42b11b4b8cc980f446088201ec1a5fa)
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-03-23
+
+    Fix many issues in gdal algs
+
+    Manual backport of #41893 (#41847) to 3.16 branch
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-23
+
+    Fix auth basic non-ascii encoding
+
+    Fixes #42405
+
+    (cherry picked from commit 04cc0d2ae0ec9863cd534fcaae8cb6d5a98f96f7)
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-03-09
+
+    For internal layers, opacitiy has to be set after the style has been set
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-03-08
+
+    Also test the opacity parameter within the external layer
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-03-08
+
+    Test if opacity is applied for external layers
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-03-07
+
+    Opacity should also be considered for external layers
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-22
+
+    Fix some ArcGis VectorTileServer urls cannot be directly loaded
+
+    Some services don't default to returning JSON for the capabilities,
+    so explicitly request it
+
+    Fixes #42314
+
+    (cherry picked from commit 87c7c46f99e58e29a4ff434464eb759c4fe17064)
+
+Damiano <damiano@opengis.ch>	2021-03-18
+
+    Fix relation editor widget not visible if n:m relation name is empty (#42312)
+
+    Check relations for equality by Id instead of name and check only if the
+    relation in context is valid.
+
+    (cherry picked from commit e75b6df2ee533d0b134b47cdc2e780b692c3ed96)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-22
+
+    Better error reporting in Point on Surface
+
+    (cherry picked from commit 954ad351575e811e69fddc8eb6976ebab52b2988)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-22
+
+    [processing] When running "point on surface" with "create point for
+    each part" option enabled, discard incoming fid fields and regenerate
+
+    Because we are potentially outputing multiple features per input
+    feature when this option is enabled, we can't guarantee that the
+    existing fid values will be unique.
+
+    Fixes #42350
+
+    (cherry picked from commit 1b2ca794d2475454b8254c673832c8301370c9dd)
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-03-22
+
+    [processing] Centroids: optimize for multipart and better error reporting
+
+    See 954ad351575e811e69fddc8eb6976ebab52b2988 https://github.com/qgis/QGIS/pull/42363
+
+    (cherry picked from commit da66253a9fc22eaa41d2e75fe6bb80c87fc08839)
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-03-22
+
+    [processing] Fix "Centroids" alg with multipart geometries
+
+    when the "Create centroid for each part" option is enabled discard incoming fid field and regenerate it
+
+    See 1b2ca794d2475454b8254c673832c8301370c9dd https://github.com/qgis/QGIS/pull/42363
+
+    (cherry picked from commit c2451a903f9b8ebff0f2a21b5441c9e3cf2c83ef)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-02
+
+    Server WMS GetPrint accesscontrol support
+
+    Cherry-picked from master c6699b28b2.
+
+Tudor Bărăscu <tudor.barascu@qtibia.ro>	2021-01-25
+
+    fix dxf export for espg's with reverse axes + test
+
+    The dxf export didn't work for reverse axis projections (north, east)
+    as the BBOX for WMS 1.3.0 comes in South, West, North, East and the
+    dxf export treated it like West, South, East, North.
+
+    The logic is taken from the normal GetMap, GetPrint requests.
+
+    Backport from https://github.com/qgis/QGIS/pull/41160
+
+Martin Dobias <wonder.sk@gmail.com>	2021-03-17
+
+    Fix sip
+
+Martin Dobias <wonder.sk@gmail.com>	2021-03-16
+
+    Extra fixes
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-16
+
+    Merge pull request #42187 from wonder-sk/fix-rasterize-alg-layer-list
+
+    Fix wrong list of layers in Rasterize alg (Convert map to raster)
+
+    (cherry picked from commit eb185d26826bc67eb69c84dc333cc0c8690bd437)
+
+Marco Bernasocchi <marco@opengis.ch>	2021-03-16
+
+    Allow loading GPKG layers with GEOMETRY type (#42253)
+
+    (cherry picked from commit 60f788c91df643a1447a503526567385e1d70015)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-18
+
+    More masks
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-18
+
+    More masks
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-18
+
+    Fix WMS DPI scale rounding error
+
+    Backported from master PR #42292
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-11
+
+    Merge pull request #42754 from rouault/fix_crash_bad_vector_layer
+
+    Gui: fix crash when opening vector layer property dialog on a bad layer
+
+Matthias Kuhn <matthias@opengis.ch>	2021-04-13
+
+    Merge pull request #42782 from nirvn/updatefeature_fix
+
+    [vectorlayer] Fix updateFeature() when an attribute's variant goes from null to default null value
+
+Merge: bfd36fddc9 f6bd0e51e7
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-17
+
+    Merge pull request #42801 from qgis/backport-42771-to-release-3_16
+
+    [Backport release-3_16] [Server] QgsServerFeatureId use combine expression in update feature request
+
+Jürgen E. Fischer <jef@norbit.de>	2021-04-16
+
+    Release of 3.16.6
+
+Jürgen E. Fischer <jef@norbit.de>	2021-04-16
+
+    translation update for 3.16.6 from transifex
+
+github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>	2021-04-15
+
+    fix wrong identification of python 3.10 as python 3.1 (#42799) (#42807)
+
+    Co-authored-by: Basil Eric Rabi <ericbasil.rabi@gmail.com>
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-15
+
+    Merge pull request #42771 from rldhont/server-feature-id-combine-expression
+
+    [Server] QgsServerFeatureId use combine expression in update feature request
+
+Jürgen E. Fischer <jef@norbit.de>	2021-04-13
+
+    debian packaging: fix hirsute python library detection
+
+Merge: f080813c17 3a295c7484
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-12
+
+    Merge pull request #42775 from qgis/backport-42748-to-release-3_16
+
+    [Backport release-3_16] Update user groups data
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-10
+
+    Merge pull request #42748 from gacarrillor/add_4_new_user_groups
+
+    Update user groups data
+
+Jürgen E. Fischer <jef@norbit.de>	2021-04-04
+
+    debian packaging: add hirsute, drop eoan
+
+Jürgen E. Fischer <jef@norbit.de>	2021-04-12
+
+    scripts/scandeps.pl: drop qt5-default, add pandoc, run
+
+    (backport commit 17084b8cf50a231642ec197b6b2a077520a476f2)
+
+Merge: 025643c18f c064ee8fb7
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-10
+
+    Merge pull request #42739 from qgis/backport-42736-to-release-3_16
+
+    [Backport release-3_16] Update server landing page sources
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-09
+
+    Merge pull request #42736 from pathmapper/favicon
+
+    Update server landing page sources
+
+Merge: 0dd9b67685 b12dfd4d90
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-09
+
+    Merge pull request #42735 from pathmapper/bp-3_16-minified
+
+    [Backport release-3_16] Server landing page - update minified version
+
+pathmapper <pathmapper@posteo.de>	2021-04-08
+
+    Update minified version (follow-up on #42697)
+
+Merge: c1b003623b 97faffe62e
+Alessandro Pasotti <elpaso@itopen.it>	2021-04-08
+
+    Merge pull request #42722 from pathmapper/backport-42697-to-release-3_16
+
+    [Backport release-3_16] Use recommended osm tile url for server API - Features and landingpage
+
+pathmapper <pathmapper@posteo.de>	2021-04-08
+
+    Use recommended osm tile url for server API - Features and landingpage (#42697)
+
+    * Use recommended osm tile url
+
+Jürgen E. Fischer <jef@norbit.de>	2021-04-07
+
+    make wms server field configuration translatable
+
+    (cherry picked from commit e6e78f07de96c691c478f5ae1c7979be8be15db8)
+
+Tomas Straupis <tomasstraupis@gmail.com>	2021-04-04
+
+    Natural Breaks (Jenks) classification causes crash (#42618)
+
+Denis Rouzaud <denis.rouzaud@gmail.com>	2021-04-02
+
+    remove cpp check on 16.04 (#42616)
+
+Richard Duivenvoorde <richard@duif.net>	2021-03-31
+
+    Disable the prefetching of images from OWS services
+
+    See:
+    https://lists.osgeo.org/pipermail/qgis-developer/2021-February/063165.html
+    and a followup of
+    https://github.com/qgis/QGIS/pull/41832
+
+    Never prefetch tiled OWS layers
+
+Know More <goooog@88.com>	2021-03-30
+
+    [processing] Fix encoding for raster analysis algorithm outputs
+
+Jürgen E. Fischer <jef@norbit.de>	2021-03-27
+
+    osgeo4w: fix nightlies with nightlies of proj and gdal
+
+Jürgen E. Fischer <jef@norbit.de>	2021-03-26
+
+    fix submission in nightlies
+
+    (cherry picked from commit bc1f5d23d66b1e3de00225c3b4bb380299010f8f)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-03-23
+
+    spelling fixes
+
+    (cherry picked from commit 2d1aa68f0d044f2aced7ebeca8d2fa6b754ac970)
+
+Jürgen E. Fischer <jef@norbit.de>	2021-03-23
+
+    fix update_news.pl and update NEWS.md
+
+    (cherry picked from commit e45b81989721ace64ad04dd137a62ada07d3c5b2)
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-03-21
+
+    Fix Help button for "Raster Layer Save as..." dlg
+
+    Replace
+    "managing_data_source/create_layers.html#save-layer-from-an-existing-file"
+    with
+    "managing_data_source/create_layers.html#creating-new-layers-from-an-existing-layer"
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-03-21
+
+    Fix Help button for "Vector Layer Save as..." dlg
+
+    Replace
+    "managing_data_source/create_layers.html#save-layer-from-an-existing-file"
+    with
+    "managing_data_source/create_layers.html#creating-new-layers-from-an-existing-layer"
+
+Andrea Giudiceandrea <andreaerdna@libero.it>	2021-03-15
+
+    [processing][gdal] Fix parsing of creation options for Roughness alg
+
+    (cherry picked from commit e11b7f0230656ee2ba990f34ae19ed2fe68a8a48)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-12
+
+    [processing] Fix use of "Save log to file" algorithm in models
+    run from the qgis_process standalone tool
+
+    (cherry picked from commit 6daeebcd09f5c09569ebda299eb3d592e9a523d4)
+
+Julien Cabieces <julien.cabieces@oslandia.com>	2021-03-08
+
+    Update widget state when scale locked state is changed from API
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-09
+
+    Fix untranslated message when downloading wms legend graphics, also
+    improve message when total size is unknown (-1)
+
+    (cherry picked from commit f9a6e33435fd72ba706f2a10ab3fbd8cc5a50914)
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-03-09
+
+    [processing] Fix atlas export relying on predefined scale for atlas-controlled map items (#42081)
+
+    * [processing] Fix atlas export relying on predefined scale for atlas-controlled map items
+
+    * De-duplicate code, add a QgsLayoutUtils::predefinedScale function
+
+    (cherry picked from commit 22d082661547abe008c229798f683263bc6323cc)
+
+Matthias Kuhn <matthias@opengis.ch>	2021-03-05
+
+    [layout] Add legend item scope to render context
+
+    This enables us to render symbols differently in different legends
+
+    (cherry picked from commit c213c49151ec81989e12f5956dd36c1ec91bee0d)
+
+Mathieu Pellerin <nirvn.asia@gmail.com>	2021-03-03
+
+    [delimitedtext] Fix regression opening files with unicode characters
+    (fixes #41948)
+
+    (cherry picked from commit 7278ec85b1fd2677699dc25c02bac10e2cf0bc6b)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-02-25
+
+    Fix QgsAttributes equality operator when comparing attributes where
+    one set contains a string value of a date, and the other a QDateTime
+    value of the same date
+
+    For some bizarre reason the QVariant == test returns true when
+    comparing a QDateTime variant to a QString variant where the
+    string matches the default string format representation of that
+    date...!!!!
+
+    (cherry picked from commit cedb64f6e87d79b1d7acb221f2fab1aeff8403ff)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-02-11
+
+    QGIS expressions are not sensitive to the case of field names, so
+    mimic this same insensitivity when compiling expressions for providers
+
+    Avoids the expression compilation failing whenever a referenced
+    field in an expression does not exactly match the layer's field
+    name case.
+
+    (cherry picked from commit 52528c5dcd984097ee4f960268134588394a57e5)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-02-25
+
+    [memory] Correctly store converted field values when adding or
+    changing attributes
+
+    If testing for value compatiblity via QgsField::convertCompatibility
+    only resulted in true because an automatic type conversion happened
+    then we need to store the auto converted value, not the original.
+
+    (cherry picked from commit d5eb6b0ec2c17b7455a7a03358bd2bf852d1a3a1)
+    (cherry picked from commit 0a8f040d7ecd35bd2f850c7d179291c48be1a232)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-03
+
+    Fix crash on exit when remember last used attribute values is checked
+
+    (cherry picked from commit f4e5fdb4fa8967bb831f49090a550e5616c089aa)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-03-03
+
+    Don't silently swallow exceptions in python context managers
+
+    Notably this causes processing modules to silently fail to load
+    without any warnings if the required dependancies (such as pyscopg2)
+    are not installed
+
+    (cherry picked from commit 1040fe8705172b0add7ff8f54862088abaad9a2c)
+
+Benjamin Jakimow benjamin.jakimow@geo.hu-berlin.de <benjamin.jakimow@geo.hu-berlin.de>	2021-02-25
+
+    QgsPluginInstaller can now read zipfiles where 1st internal file is located in plugin subfolder
+
+    (cherry picked from commit 048af492b1d3f01e45f4d2955b674dd67100c8c2)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-02-23
+
+    [layouts] Fix map item loses preset them choice if item is selected
+    when a map theme is renamed or changed
+
+    (cherry picked from commit 34f4d1f97fdc7fa8943c507518551b37d595072d)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-02-17
+
+    Remove confusing crs prompt which can show when loading a raster file into the georeferencer window
+
+    (cherry picked from commit ad052b5b7b2cbd5d25081f54eecadd29d30852f9)
+    (cherry picked from commit 76620ff83d5aae7ff10b0af55158d2cf2d342307)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-02-17
+
+    [georeferencer] NEVER load raster file being referenced into the
+    current project
+
+    This was likely a decades old hack in order to get the layer to
+    show in the georeferencer canvas, but it's not needed now
+    and definitely not wanted.
+
+    Loading into the project as a hidden layer just complicates things,
+    and runs into all sorts of issues such as users saving a project
+    while a georeference is in project leaves around hidden ghost
+    layers in the project...
+
+    (cherry picked from commit ede3ca2305784fe872bf909c0e90a7eed7294a38)
+    (cherry picked from commit ea4bc09867b5dfde7d3cf6285dfeeb46c0ef4638)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-02-03
+
+    Replace colon in typenames
+
+    Fixes #41292 QGISserver WFS returns invalid GML in case of cascading WFS
+
+    (cherry picked from commit 65b272d1dcc6ffdcf8add04d4d0d11228b231229)
+
+Nyall Dawson <nyall.dawson@gmail.com>	2021-02-19
+
+    [layouts] Correctly set data defined html url or attribute table
+    source property on the parent multiframe object, not the child frame
+
+    Fixes #41590
+    Fixes #36647
+
+    (cherry picked from commit 8324317e228c66e32fc3446c371a23fbdba98701)
+
+Marco Hugentobler <marco.hugentobler@sourcepole.ch>	2021-02-19
+
+    Ignore getLegendGraphic URL if GetMap url is ignored (#41596)
+
+    (cherry picked from commit 7031fed0164453dba4dba815c9cff6446f75f3ac)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-02-17
+
+    QgsProjectLayerGroupDialog: accept an existing project
+
+    in an overloaded constructor.
+
+    Fixes #40552
+
+    (cherry picked from commit e9be3a82b05a949e31f50b4ab33e46d1041d2752)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-02-19
+
+    Set gathered statistics to none when there are no statistics
+
+    Fixes #41662
+
+    (cherry picked from commit caa19170ba3e14b8a2db4cef7a24a3a0e247d096)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-02-18
+
+    Set min/max from data type when GDAL stats fail
+
+    Fixes #41662
+
+    (cherry picked from commit 30b216602440a511001663011ed7d8b4f7a7c645)
+
+Alessandro Pasotti <elpaso@itopen.it>	2021-03-03
+
+    Merge pull request #42000 from elpaso/bugfix-server-accesscontrol-gfi-reset
+
+    Server accesscontrol getfeatureifo rules clear
+
+Jürgen E. Fischer <jef@norbit.de>	2021-03-19
+
+    Release of 3.16.5
+
 Jürgen E. Fischer <jef@norbit.de>	2021-03-19
 
     translation update for 3.16.5 from transifex

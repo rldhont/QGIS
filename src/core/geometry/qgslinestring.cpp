@@ -363,6 +363,24 @@ bool QgsLineString::removeDuplicateNodes( double epsilon, bool useZValues )
   return result;
 }
 
+bool QgsLineString::isClosed2D() const
+{
+  if ( mX.empty() )
+    return false;
+
+  return qgsDoubleNear( mX.first(), mX.last() ) &&
+         qgsDoubleNear( mY.first(), mY.last() );
+}
+
+bool QgsLineString::isClosed() const
+{
+  bool closed = isClosed2D();
+
+  if ( is3D() && closed )
+    closed &= qgsDoubleNear( mZ.first(), mZ.last() ) || ( std::isnan( mZ.first() ) && std::isnan( mZ.last() ) );
+  return closed;
+}
+
 QVector< QgsVertexId > QgsLineString::collectDuplicateNodes( double epsilon, bool useZValues ) const
 {
   QVector< QgsVertexId > res;

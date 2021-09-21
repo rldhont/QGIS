@@ -112,7 +112,7 @@ void QgsSimpleFillSymbolLayer::applyDataDefinedSymbology( QgsSymbolRenderContext
   {
     context.setOriginalValueVariable( QgsSymbolLayerUtils::encodeBrushStyle( mBrushStyle ) );
     QVariant exprVal = mDataDefinedProperties.value( QgsSymbolLayer::PropertyFillStyle, context.renderContext().expressionContext() );
-    if ( exprVal.isValid() )
+    if ( !exprVal.isNull() )
       brush.setStyle( QgsSymbolLayerUtils::decodeBrushStyle( exprVal.toString() ) );
   }
   if ( mDataDefinedProperties.isActive( QgsSymbolLayer::PropertyStrokeColor ) )
@@ -126,12 +126,15 @@ void QgsSimpleFillSymbolLayer::applyDataDefinedSymbology( QgsSymbolRenderContext
   {
     context.setOriginalValueVariable( mStrokeWidth );
     QVariant exprVal = mDataDefinedProperties.value( QgsSymbolLayer::PropertyStrokeWidth, context.renderContext().expressionContext() );
-    double width = exprVal.toDouble( &ok );
-    if ( ok )
+    if ( !exprVal.isNull() )
     {
-      width = context.renderContext().convertToPainterUnits( width, mStrokeWidthUnit, mStrokeWidthMapUnitScale );
-      pen.setWidthF( width );
-      selPen.setWidthF( width );
+      double width = exprVal.toDouble( &ok );
+      if ( ok )
+      {
+        width = context.renderContext().convertToPainterUnits( width, mStrokeWidthUnit, mStrokeWidthMapUnitScale );
+        pen.setWidthF( width );
+        selPen.setWidthF( width );
+      }
     }
   }
   if ( mDataDefinedProperties.isActive( QgsSymbolLayer::PropertyStrokeStyle ) )
@@ -3628,15 +3631,19 @@ void QgsPointPatternFillSymbolLayer::toSld( QDomDocument &doc, QDomElement &elem
     symbolizerElem.appendChild( distanceElem );
 
     QgsSymbolLayer *layer = mMarkerSymbol->symbolLayer( i );
-    QgsMarkerSymbolLayer *markerLayer = static_cast<QgsMarkerSymbolLayer *>( layer );
-    if ( !markerLayer )
+    if ( QgsMarkerSymbolLayer *markerLayer = dynamic_cast<QgsMarkerSymbolLayer *>( layer ) )
     {
-      QString errorMsg = QStringLiteral( "MarkerSymbolLayerV2 expected, %1 found. Skip it." ).arg( layer->layerType() );
+      markerLayer->writeSldMarker( doc, graphicFillElem, props );
+    }
+    else if ( layer )
+    {
+      QString errorMsg = QStringLiteral( "QgsMarkerSymbolLayer expected, %1 found. Skip it." ).arg( layer->layerType() );
       graphicFillElem.appendChild( doc.createComment( errorMsg ) );
     }
     else
     {
-      markerLayer->writeSldMarker( doc, graphicFillElem, props );
+      QString errorMsg = QStringLiteral( "Missing point pattern symbol layer. Skip it." );
+      graphicFillElem.appendChild( doc.createComment( errorMsg ) );
     }
   }
 }

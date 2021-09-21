@@ -909,7 +909,8 @@ void QgsAttributeForm::onAttributeChanged( const QVariant &value, const QVariant
 
       signalEmitted = true;
 
-      updateJoinedFields( *eww );
+      if ( mValuesInitialized )
+        updateJoinedFields( *eww );
 
       break;
     }
@@ -1825,6 +1826,7 @@ void QgsAttributeForm::initPython()
           {
             // Read it into a string
             QTextStream inf( inputFile );
+            inf.setCodec( "UTF-8" );
             initCode = inf.readAll();
             inputFile->close();
           }

@@ -312,7 +312,7 @@ QString QgsField::displayString( const QVariant &v ) const
       }
     }
     // Default for doubles with precision
-    else if ( d->type == QVariant::Double && d->precision > 0 )
+    else if ( d->precision > 0 )
     {
       if ( -1 < v.toDouble() && v.toDouble() < 1 )
       {
@@ -355,9 +355,9 @@ QString QgsField::readableConfigurationFlag( QgsField::ConfigurationFlag flag )
     case ConfigurationFlag::NotSearchable:
       return QObject::tr( "Not searchable" );
     case ConfigurationFlag::HideFromWms:
-      return QStringLiteral( "Do not expose via WMS" );
+      return QObject::tr( "Do not expose via WMS" );
     case ConfigurationFlag::HideFromWfs:
-      return QStringLiteral( "Do not expose via WFS" );
+      return QObject::tr( "Do not expose via WFS" );
   }
   return QString();
 }

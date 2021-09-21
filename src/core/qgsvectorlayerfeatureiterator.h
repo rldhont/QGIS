@@ -149,14 +149,32 @@ class CORE_EXPORT QgsVectorLayerFeatureIterator : public QgsAbstractFeatureItera
       const QgsVectorLayerJoinInfo *joinInfo;//!< Canonical source of information about the join
       QgsAttributeList attributes;      //!< Attributes to fetch
       int indexOffset;                  //!< At what position the joined fields start
-      QgsVectorLayer *joinLayer;        //!< Resolved pointer to the joined layer
+
+#ifndef SIP_RUN
+
+      /**
+       * Feature source for join
+       *
+       * \note Not available in Python bindings
+       * \since QGIS 3.20
+       */
+      std::shared_ptr< QgsVectorLayerFeatureSource > joinSource;
+
+      /**
+       * Fields from joined layer.
+       *
+       * \note Not available in Python bindings
+       * \since QGIS 3.20
+       */
+      QgsFields joinLayerFields;
+#endif
+
       int targetField;                  //!< Index of field (of this layer) that drives the join
       int joinField;                    //!< Index of field (of the joined layer) must have equal value
 
       void addJoinedAttributesCached( QgsFeature &f, const QVariant &joinValue ) const;
       void addJoinedAttributesDirect( QgsFeature &f, const QVariant &joinValue ) const;
     };
-
 
     bool isValid() const override;
 

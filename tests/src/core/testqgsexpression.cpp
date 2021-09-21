@@ -1318,6 +1318,7 @@ class TestQgsExpression: public QObject
       QTest::newRow( "regexp_replace cap group" ) << "regexp_replace('HeLLo','(eL)', 'x\\\\1x')" << false << QVariant( "HxeLxLo" );
       QTest::newRow( "regexp_replace invalid" ) << "regexp_replace('HeLLo','[[[', '-')" << true << QVariant();
       QTest::newRow( "substr" ) << "substr('HeLLo', 3,2)" << false << QVariant( "LL" );
+      QTest::newRow( "substr named parameters" ) << "substr(string:='HeLLo',start:=3,length:=2)" << false << QVariant( "LL" );
       QTest::newRow( "substr negative start" ) << "substr('HeLLo', -4)" << false << QVariant( "eLLo" );
       QTest::newRow( "substr negative length" ) << "substr('HeLLo', 1,-3)" << false << QVariant( "He" );
       QTest::newRow( "substr positive start and negative length" ) << "substr('HeLLo', 3,-1)" << false << QVariant( "LL" );
@@ -2153,6 +2154,8 @@ class TestQgsExpression: public QObject
 
       // check again - make sure value was correctly cached
       res = exp.evaluate( &context );
+      // if first evaluation has an eval error, so should any subsequent evaluations!
+      QCOMPARE( exp.hasEvalError(), evalError );
       QCOMPARE( res, result );
     }
 
@@ -3902,6 +3905,9 @@ class TestQgsExpression: public QObject
       e = QgsExpression( QStringLiteral( "array(1,2,3)[-4]" ) );
       QVERIFY( !e.evaluate( &context ).isValid() );
       QVERIFY( !e.hasEvalError() ); // no eval error - we are tolerant to this
+      e = QgsExpression( QStringLiteral( "@null_variable[0]" ) );
+      QVERIFY( !e.evaluate( &context ).isValid() );
+      QVERIFY( !e.hasEvalError() ); // no eval error - we are tolerant to this
 
       // maps
       e = QgsExpression( QStringLiteral( "map('a',1,'b',2,'c',3)[0]" ) );
@@ -3918,6 +3924,9 @@ class TestQgsExpression: public QObject
       QCOMPARE( e.evaluate( &context ).toInt(), 3 );
       e = QgsExpression( QStringLiteral( "map('a',1,'bbb',2,'c',3)['b'||'b'||'b']" ) );
       QCOMPARE( e.evaluate( &context ).toInt(), 2 );
+      e = QgsExpression( QStringLiteral( "@null_variable['key']" ) );
+      QVERIFY( !e.evaluate( &context ).isValid() );
+      QVERIFY( !e.hasEvalError() ); // no eval error - we are tolerant to this
     }
 
 

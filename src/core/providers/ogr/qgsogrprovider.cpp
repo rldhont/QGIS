@@ -587,10 +587,10 @@ QgsOgrProvider::QgsOgrProvider( QString const &uri, const ProviderOptions &optio
     QMutex *mutex = nullptr;
     OGRLayerH layer = mOgrOrigLayer->getHandleAndMutex( mutex );
     QMutexLocker locker( mutex );
-    const QString identifier = GDALGetMetadataItem( layer, "IDENTIFIER", nullptr );
+    const QString identifier = GDALGetMetadataItem( layer, "IDENTIFIER", "" );
     if ( !identifier.isEmpty() )
       mLayerMetadata.setTitle( identifier ); // see geopackage specs -- "'identifier' is analogous to 'title'"
-    const QString abstract = GDALGetMetadataItem( layer, "DESCRIPTION", nullptr );
+    const QString abstract = GDALGetMetadataItem( layer, "DESCRIPTION", "" );
     if ( !abstract.isEmpty() )
       mLayerMetadata.setAbstract( abstract );
   }
@@ -1042,7 +1042,11 @@ OGRwkbGeometryType QgsOgrProvider::getOgrGeomType( const QString &driverName, OG
     // In such cases, we use virtual sublayers for each geometry if the layer contains
     // multiple geometries (see subLayers) otherwise we guess geometry type from the first
     // feature that has a geometry (limit us to a few features, not the whole layer)
-    if ( geomType == wkbUnknown )
+    //
+    // For ESRI formats with a GeometryCollection25D type we also query features for the geometry type,
+    // as they may be ESRI MultiPatch files which we want to report as MultiPolygon25D types
+    if ( geomType == wkbUnknown
+         || ( geomType == wkbGeometryCollection25D && ( driverName == QLatin1String( "ESRI Shapefile" ) || driverName == QLatin1String( "OpenFileGDB" ) || driverName == QLatin1String( "FileGDB" ) ) ) )
     {
       geomType = wkbNone;
       OGR_L_ResetReading( ogrLayer );
@@ -1057,9 +1061,9 @@ OGRwkbGeometryType QgsOgrProvider::getOgrGeomType( const QString &driverName, OG
         {
           geomType = OGR_G_GetGeometryType( geometry );
 
-          // Shapefile MultiPatch can be reported as GeometryCollectionZ of TINZ
+          // ESRI MultiPatch can be reported as GeometryCollectionZ of TINZ
           if ( wkbFlatten( geomType ) == wkbGeometryCollection &&
-               driverName == QLatin1String( "ESRI Shapefile" )  &&
+               ( driverName == QLatin1String( "ESRI Shapefile" ) || driverName == QLatin1String( "OpenFileGDB" ) || driverName == QLatin1String( "FileGDB" ) ) &&
                OGR_G_GetGeometryCount( geometry ) >= 1 &&
                wkbFlatten( OGR_G_GetGeometryType( OGR_G_GetGeometryRef( geometry, 0 ) ) ) == wkbTIN )
           {
@@ -2214,6 +2218,8 @@ bool QgsOgrProvider::_setSubsetString( const QString &theSQL, bool updateFeature
   if ( theSQL == mSubsetString && mFeaturesCounted != QgsVectorDataProvider::Uncounted )
     return true;
 
+  const bool subsetStringHasChanged { theSQL != mSubsetString };
+
   if ( !theSQL.isEmpty() )
   {
     QMutex *mutex = nullptr;
@@ -2300,10 +2306,11 @@ bool QgsOgrProvider::_setSubsetString( const QString &theSQL, bool updateFeature
     recalculateFeatureCount();
   }
 
-  // check the validity of the layer
-  QgsDebugMsgLevel( QStringLiteral( "checking validity" ), 4 );
-  loadFields();
-  QgsDebugMsgLevel( QStringLiteral( "Done checking validity" ), 4 );
+  // check the validity of the layer if subset string has changed
+  if ( subsetStringHasChanged )
+  {
+    loadFields();
+  }
 
   invalidateCachedExtent( false );
 
@@ -2382,8 +2389,9 @@ bool QgsOgrProvider::changeAttributeValues( const QgsChangedAttributesMap &attr_
           if ( it2->toLongLong() != fid )
           {
             pushError( tr( "Changing feature id of feature %1 is not allowed." ).arg( fid ) );
-            continue;
+            returnValue = false;
           }
+          continue;
         }
         else
         {
@@ -2562,6 +2570,7 @@ bool QgsOgrProvider::changeGeometryValues( const QgsGeometryMap &geometry_map )
     if ( !theOGRFeature )
     {
       pushError( tr( "OGR error changing geometry: feature %1 not found" ).arg( it.key() ) );
+      returnvalue = false;
       continue;
     }
 
@@ -2584,13 +2593,14 @@ bool QgsOgrProvider::changeGeometryValues( const QgsGeometryMap &geometry_map )
       {
         pushError( tr( "OGR error creating geometry for feature %1: %2" ).arg( it.key() ).arg( CPLGetLastErrorMsg() ) );
         OGR_G_DestroyGeometry( newGeometry );
-        newGeometry = nullptr;
+        returnvalue = false;
         continue;
       }
 
       if ( !newGeometry )
       {
         pushError( tr( "OGR error in feature %1: geometry is null" ).arg( it.key() ) );
+        returnvalue = false;
         continue;
       }
 
@@ -2604,6 +2614,7 @@ bool QgsOgrProvider::changeGeometryValues( const QgsGeometryMap &geometry_map )
       // Shouldn't happen normally. If it happens, ownership of the geometry
       // may be not really well defined, so better not destroy it, but just
       // the feature.
+      returnvalue = false;
       continue;
     }
 
@@ -4346,6 +4357,42 @@ GDALDatasetH QgsOgrProviderUtils::GDALOpenWrapper( const char *pszPath, bool bUp
   if ( phDriver )
     *phDriver = hDrv;
 
+#if GDAL_VERSION_NUM < GDAL_COMPUTE_VERSION(3, 3, 1)
+  if ( bUpdate && bIsGpkg && strcmp( GDALGetDriverShortName( hDrv ), "GPKG" ) == 0 )
+  {
+    // Fix wrong gpkg_metadata_reference_column_name_update trigger that was
+    // generated by GDAL < 2.4.0
+    OGRLayerH hSqlLyr = GDALDatasetExecuteSQL(
+                          hDS,
+                          "SELECT sql FROM sqlite_master WHERE type = 'trigger' AND "
+                          "NAME ='gpkg_metadata_reference_column_name_update' AND "
+                          "sql LIKE '%column_nameIS%'",
+                          nullptr, nullptr );
+    if ( hSqlLyr )
+    {
+      QString triggerSql;
+      gdal::ogr_feature_unique_ptr hFeat( OGR_L_GetNextFeature( hSqlLyr ) );
+      if ( hFeat )
+      {
+        triggerSql = OGR_F_GetFieldAsString( hFeat.get(), 0 );
+      }
+      GDALDatasetReleaseResultSet( hDS, hSqlLyr );
+
+      if ( !triggerSql.isEmpty() )
+      {
+        GDALDatasetExecuteSQL(
+          hDS, "DROP TRIGGER gpkg_metadata_reference_column_name_update",
+          nullptr, nullptr );
+        GDALDatasetExecuteSQL(
+          hDS,
+          triggerSql.replace( QLatin1String( "column_nameIS" ),
+                              QLatin1String( "column_name IS" ) ).toUtf8().toStdString().c_str(),
+          nullptr, nullptr );
+      }
+    }
+  }
+#endif
+
   return hDS;
 }
 
@@ -5192,7 +5239,6 @@ QgsOgrLayerUniquePtr QgsOgrProviderUtils::getLayer( const QString &dsName,
                      ds->hDS, layerIndex );
           if ( hLayer )
           {
-            OGR_L_SetAttributeFilter( hLayer, nullptr );
             layerName = QString::fromUtf8( OGR_L_GetName( hLayer ) );
           }
         }
@@ -5249,7 +5295,6 @@ QgsOgrLayerUniquePtr QgsOgrProviderUtils::getLayer( const QString &dsName,
                    ds->hDS, layerIndex );
         if ( hLayer )
         {
-          OGR_L_SetAttributeFilter( hLayer, nullptr );
           layerName = QString::fromUtf8( OGR_L_GetName( hLayer ) );
         }
       }
@@ -6156,7 +6201,7 @@ GIntBig QgsOgrLayer::GetApproxFeatureCount()
       }
     }
   }
-  if ( driverName == QLatin1String( "OAPIF" ) || driverName == QLatin1String( "OAPIF" ) )
+  if ( driverName == QLatin1String( "OAPIF" ) || driverName == QLatin1String( "WFS3" ) )
   {
     return -1;
   }
@@ -7028,16 +7073,16 @@ bool QgsOgrProviderUtils::deleteLayer( const QString &uri, QString &errCause )
                                  openOptions );
 
 
-  GDALDatasetH hDS = GDALOpenEx( filePath.toUtf8().constData(), GDAL_OF_RASTER | GDAL_OF_VECTOR | GDAL_OF_UPDATE, nullptr, nullptr, nullptr );
+  gdal::dataset_unique_ptr hDS( GDALOpenEx( filePath.toUtf8().constData(), GDAL_OF_RASTER | GDAL_OF_VECTOR | GDAL_OF_UPDATE, nullptr, nullptr, nullptr ) );
   if ( hDS  && ( ! layerName.isEmpty() || layerIndex != -1 ) )
   {
     // If we have got a name we convert it into an index
     if ( ! layerName.isEmpty() )
     {
       layerIndex = -1;
-      for ( int i = 0; i < GDALDatasetGetLayerCount( hDS ); i++ )
+      for ( int i = 0; i < GDALDatasetGetLayerCount( hDS.get() ); i++ )
       {
-        OGRLayerH hL = GDALDatasetGetLayer( hDS, i );
+        OGRLayerH hL = GDALDatasetGetLayer( hDS.get(), i );
         if ( layerName == QString::fromUtf8( OGR_L_GetName( hL ) ) )
         {
           layerIndex = i;
@@ -7048,7 +7093,7 @@ bool QgsOgrProviderUtils::deleteLayer( const QString &uri, QString &errCause )
     // Do delete!
     if ( layerIndex != -1 )
     {
-      OGRErr error = GDALDatasetDeleteLayer( hDS, layerIndex );
+      OGRErr error = GDALDatasetDeleteLayer( hDS.get(), layerIndex );
       switch ( error )
       {
         case OGRERR_NOT_ENOUGH_DATA:
@@ -7078,7 +7123,6 @@ bool QgsOgrProviderUtils::deleteLayer( const QString &uri, QString &errCause )
         case OGRERR_NON_EXISTING_FEATURE:
           errCause = QObject::tr( "Non existing feature" );
           break;
-        default:
         case OGRERR_NONE:
           errCause = QObject::tr( "Success" );
           break;
